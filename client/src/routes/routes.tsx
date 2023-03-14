@@ -4,7 +4,7 @@ import {
     Route,
     Link
 } from 'react-router-dom';
-import {PATHS} from "../constants/paths";
+import { PATHS } from "../constants/paths";
 import HomePage from "../pages/Home";
 
 export default function Routes() {
