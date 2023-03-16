@@ -1,8 +1,18 @@
 import React from 'react';
-import { AppBar, Toolbar, InputBase, Typography, Button } from "@mui/material";
+import {
+    AppBar,
+    Toolbar,
+    InputBase,
+    Typography,
+    Button,
+    Avatar,
+    MenuItem,
+    Menu
+} from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import SearchIcon from '@mui/icons-material/Search';
-import GroupsIcon from '@mui/icons-material/Groups';
+import teamsIcon from '../assets/images/streaming.png'
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
     header: {
@@ -13,7 +23,8 @@ const useStyles = makeStyles({
         justifyContent: 'space-between',
         height: '100% !important',
         minHeight: '40px !important',
-        backgroundColor: '#ee7a7a'
+        background: 'linear-gradient(45deg, #fcfcfc 30%, #ffcfcf 90%)',
+        boxShadow: '0px 15px 10px -15px #111'
     },
     root: {
         height: 32,
@@ -41,18 +52,41 @@ const useStyles = makeStyles({
 
 
 export default function Header(props: any) {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const infoUser = useSelector((state: any) => state.userReducer.userInfo);
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+
+    }, [])
+
     const classes = useStyles();
 
     const handleChange = (event: any) => {
         console.log(event)
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('email')
+    }
+
+    function handleClickAvatar(event: any) {
+        if (anchorEl !== event.currentTarget) {
+            setAnchorEl(event.currentTarget);
+        }
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
     return (
         <AppBar className={classes.header} position="static">
             <Toolbar className={classes.toolbar}>
                 <Button className={classes.homeButton}>
-                    <GroupsIcon style={{ color: '#e0e0e0' }} />
-                    <Typography sx={{ color: '#e0e0e0', marginLeft: '4px' }}>Home</Typography>
+                    <img src={teamsIcon} style={{ width: '24px', height: 'auto' }} />
+                    <Typography sx={{ color: '#000000', marginLeft: '4px' }}>Home</Typography>
                 </Button>
                 <div className={classes.root}>
                     <div className={classes.searchInput}>
@@ -64,8 +98,28 @@ export default function Header(props: any) {
                         />
                     </div>
                 </div>
-                <Button color="inherit">Login</Button>
+                <Button onClick={(e) => handleClickAvatar(e)}>
+                    <Typography variant='body2' sx={{
+                        color: '#000000',
+                        marginRight: '8px',
+                        textTransform: 'none'
+                    }} >Hi! {infoUser.fullName}</Typography>
+                    <Avatar sx={{ width: '24px', height: '24px' }} />
+                </Button>
             </Toolbar>
+
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                MenuListProps={{ onMouseLeave: handleClose }}
+            >
+                <MenuItem onClick={() => {
+                    console.log('next link setting user')
+                }}>Setting profile</MenuItem>
+                <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
+            </Menu>
         </AppBar>
     )
 }

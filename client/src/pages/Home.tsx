@@ -4,7 +4,8 @@ import { makeStyles } from "@mui/styles";
 import { Player } from '@lottiefiles/react-lottie-player';
 import * as lottieJson from '../assets/animation/work.json';
 import Footer from '../components/Footer';
-import { Grid } from '@mui/material';
+import { Grid, Button } from '@mui/material';
+import LoginRegister from "../components/LoginRegister";
 
 const useStyles = makeStyles({
     root: {
@@ -51,13 +52,17 @@ export default function HomePage() {
                         >
                             Let's explore my graduation project, invite your friends and create your own meeting room
                         </div>
+                        <Button sx={{ marginTop: '24px' }}>Let's join</Button>
                     </div>
                 </Grid>
                 <Grid item xs={3}>
                     <div style={{
                         width: '100%',
                         height: '100%',
-                    }}></div>
+                        padding: '24px 16px 32px 0px'
+                    }}>
+                        <LoginRegister />
+                    </div>
                 </Grid>
             </Grid>
             <Footer />
