@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import redis from 'redis';
+import routes from "./frameworks/webserver/routes";
 import serverConfig from './frameworks/webserver/server.js';
 import expressConfig from './frameworks/webserver/express.js';
 import config from './config/config.js';
@@ -20,17 +20,16 @@ serverConfig(app, mongoose, server, config).startServer()
 // db configuration and connection create
 mongoDbConnection(mongoose, config, {
     autoIndex: false,
-    // useCreateIndex: true,
     useNewUrlParser: true,
-    // autoReconnect: true,
-    // reconnectTries: Number.MAX_VALUE,
-    // reconnectInterval: 10000,
     keepAlive: 120,
-    connectTimeoutMS: 1000
+    connectTimeoutMS: 1000,
+    useCreateIndex: true
 }).connectToMongo();
 
 // error handling middleware
 app.use(errorHandlingMiddleware);
+
+routes(app, express);
 
 // expose app
 export default app;
