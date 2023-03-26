@@ -1,4 +1,4 @@
-import {addUser, findById, countAll, findByProperty, login} from "../../applications/use_case/user/user";
+import {addUser, findById, countAll, findUserByProperty, login} from "../../applications/use_case/user/user";
 
 export default function userController(
     userDbRepository,
@@ -24,7 +24,7 @@ export default function userController(
         params.page = params.page ? parseInt(params.page, 10) : 1;
         params.perPage = params.perPage ? parseInt(params.perPage, 10) : 10;
 
-        findByProperty((params, dbRepository))
+        findUserByProperty(params, dbRepository)
             .then((users) => {
                 response.users = users;
                 return countAll(params, dbRepository);
@@ -35,7 +35,7 @@ export default function userController(
                 response.perPage = params.perPage;
                 return res.json(response)
             })
-            .cache((error) => next(error));
+            .catch((error) => next(error));
     }
 
     const fetchUserById = (req, res, next) => {

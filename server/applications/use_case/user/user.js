@@ -44,8 +44,8 @@ function findById(id, userRepository) {
     return userRepository.findById(id)
 }
 
-function findByProperty(params, userRepository) {
-    return userRepository.findByProperty(params)
+function findUserByProperty(params, userRepository) {
+    return userRepository.findUserByProperty(params)
 }
 
 function login(email, password, userRepository, authService) {
@@ -61,7 +61,6 @@ function login(email, password, userRepository, authService) {
                 error.statusCode = 401;
                 throw error;
             }
-            console.log(user)
 
             const isMatch = authService.compare(password, user[0].password);
             if (!isMatch) {
@@ -71,7 +70,8 @@ function login(email, password, userRepository, authService) {
             }
             const payload = {
                 user: {
-                    id: user[0].id
+                    id: user[0].id,
+                    email: user[0].email
                 }
             }
             return authService.generateToken(payload)
@@ -82,6 +82,6 @@ export {
     addUser,
     countAll,
     findById,
-    findByProperty,
+    findUserByProperty,
     login
 }

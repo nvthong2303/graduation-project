@@ -1,13 +1,14 @@
-import UserModel from "../models/user.model";
+import UserModel from '../models/user.model';
 
+// move it to a proper place
 function omit(obj, ...props) {
-    const result = { ...props};
+    const result = { ...obj };
     props.forEach((prop) => delete result[prop]);
-    return result
+    return result;
 }
 
 export default function userRepositoryMongoDB() {
-    const findByProperty = (params) => UserModel.find(omit(params, 'page', 'perPage'))
+    const findUserByProperty = (params) => UserModel.find(omit(params, 'page', 'perPage'))
         .skip(params.perPage * params.page - params.perPage)
         .limit(params.perPage);
 
@@ -23,16 +24,14 @@ export default function userRepositoryMongoDB() {
             role: userEntity.getRole(),
             createdAt: new Date()
         });
-        return newUser.save()
-    }
 
-    const deleteById = (id) => UserModel.findByIdAndDelete(id)
+        return newUser.save();
+    };
 
     return {
-        findByProperty,
+        findUserByProperty,
         countAll,
         findById,
-        add,
-        deleteById
-    }
+        add
+    };
 }

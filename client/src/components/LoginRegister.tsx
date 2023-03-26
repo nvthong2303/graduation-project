@@ -10,6 +10,7 @@ import teamsIcon from '../assets/images/streaming.png'
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import {LoginApi, RegisterApi} from "../apis/user.api";
 
 const useStyles = makeStyles({
     root: {
@@ -113,11 +114,23 @@ function LoginRegister() {
     });
 
     const handleLogin = async (data: any) => {
-        console.log(data)
+        const res = await LoginApi(data)
+
+        if (res.status === 200) {
+
+        } else {
+
+        }
     }
 
     const handleRegister = async (data: any) => {
-        console.log(data)
+        const res = await RegisterApi(data)
+
+        if (res.status === 200) {
+
+        } else {
+
+        }
     }
 
     const handleForgetPassword = async (data: any) => {

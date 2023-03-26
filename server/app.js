@@ -23,7 +23,8 @@ mongoDbConnection(mongoose, config, {
     useNewUrlParser: true,
     keepAlive: 120,
     connectTimeoutMS: 1000,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true
 }).connectToMongo();
 
 // error handling middleware

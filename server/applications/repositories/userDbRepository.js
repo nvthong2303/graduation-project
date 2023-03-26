@@ -1,5 +1,5 @@
 export default function userRepository(repository) {
-    const findByProperty = (params) => repository.findByProperty(params);
+    const findUserByProperty = (params) => repository.findUserByProperty(params);
 
     const countAll = (params) => repository.countAll(params);
 
@@ -10,7 +10,7 @@ export default function userRepository(repository) {
     const deleteById = (id) => repository.deleteById(id);
 
     return {
-        findByProperty,
+        findUserByProperty,
         countAll,
         findById,
         add,
