@@ -10,7 +10,14 @@ function findById(id, roomRepository) {
 
 function deleteById(email, id, roomRepository) {
     // handle check email - admin room deleted
-    return roomRepository.deleteById(id)
+    return roomRepository.getAdminRoomById(id)
+      .then((room) => {
+          if (room.admin === email) {
+              return roomRepository.deleteById(id);
+          } else {
+            throw new Error('You dont have permission to delete this room')
+          }
+      })
 }
 
 function createRoom(
@@ -24,21 +31,24 @@ function createRoom(
         throw new Error('room must be has more 2 member')
     }
 
-    const _newRoom = room(
-        newRoom.title,
-        newRoom.members,
-        newRoom.avatar,
-        newRoom.lastMessage,
-        newRoom.admin,
-        newRoom.lastSender,
-        newRoom.createdAt,
-        newRoom.updatedAt,
-        newRoom.description
-    )
-
-    console.log(_newRoom)
-
-    return roomRepository.createRoom(_newRoom)
+    return roomRepository.findByProperty({ title: newRoom.title })
+      .then((roomWithTitle) => {
+          if (roomWithTitle.length) {
+              throw new Error(`Room with title: ${newRoom.title} already exist`);
+          }
+          const _newRoom = room(
+            newRoom.title,
+            newRoom.members,
+            newRoom.avatar,
+            newRoom.lastMessage,
+            newRoom.admin,
+            newRoom.lastSender,
+            newRoom.createdAt,
+            newRoom.updatedAt,
+            newRoom.description
+          )
+          return roomRepository.createRoom(_newRoom)
+      })
 }
 
 function updateLastMessage(roomId, message, sender, roomRepository) {

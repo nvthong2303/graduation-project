@@ -21,12 +21,12 @@ function addUser(
         createdAt
     );
 
-    return userRepository.findByProperty({ username })
+    return userRepository.findUserByProperty({ username })
         .then((userWithUserName) => {
             if (userWithUserName.length) {
                 throw new Error(`User with username: ${username} already exist`);
             }
-            return userRepository.findByProperty({ email });
+            return userRepository.findUserByProperty({ email });
     })
         .then((userWithEmail) => {
             if (userWithEmail.length) {
@@ -54,7 +54,7 @@ function login(email, password, userRepository, authService) {
         error.statusCode = 401;
         throw error;
     }
-    return userRepository.findByProperty({ email })
+    return userRepository.findUserByProperty({ email })
         .then((user) => {
             if(!user.length) {
                 const error = new Error('Invalid email or password');

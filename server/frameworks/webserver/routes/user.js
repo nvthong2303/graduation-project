@@ -21,8 +21,8 @@ export default function userRouter(express) {
     router.route('/').get(authMiddleware, controller.fetchUsersByProperty);
 
     // POST endpoints
-    router.route('/register').post(controller.register);
-    router.route('/login').post(controller.loginUser);
+    router.route('/register').post(controller.register); // api register
+    router.route('/login').post(controller.loginUser); // api login
 
     return router;
 }

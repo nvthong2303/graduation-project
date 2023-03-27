@@ -17,7 +17,14 @@ export default function roomRouter(express) {
     )
 
     // POST endpoints
-    router.route('/create').post(authMiddleware, controller.createRoom);
+    router.route('/create').post(authMiddleware, controller.createRoom); // create new room
+
+    // GET endpoints
+    router.route('/:id').get(authMiddleware, controller.fetchRoomById); // get room by roomId
+    router.route('/').get(authMiddleware, controller.fetchRoomByMember); // get list room user join
+
+    // Delete endpoints
+    router.route('/:id').delete(authMiddleware, controller.deleteRoom); // delete room
 
     return router;
 }

@@ -27,10 +27,11 @@ mongoDbConnection(mongoose, config, {
     useUnifiedTopology: true
 }).connectToMongo();
 
-// error handling middleware
-app.use(errorHandlingMiddleware);
 
 routes(app, express);
+
+// error handling middleware
+app.use(errorHandlingMiddleware);
 
 // expose app
 export default app;

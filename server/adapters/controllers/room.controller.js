@@ -60,16 +60,49 @@ export default function roomController(
         }
         _createRoom(newRoom, dbRepository)
             .then((room) => {
-                console.log(room)
-                return res.json({ message: 'hello world' });
+                return res.json(room);
             })
             .catch((err) => {
                 next(err)
             })
     }
 
+    const fetchRoomById = (req, res, next) => {
+        findById(req.params.id, dbRepository)
+          .then((room) => {
+              res.json(room)
+          })
+          .catch((err) => next(err))
+    }
+
+    const fetchRoomByMember = (req, res, next) => {
+        const params = {
+            members: {
+                $in: [req.user.email]
+            }
+        }
+        findByProperty(params, dbRepository)
+          .then((listRoom) => {
+              return res.json(listRoom)
+          })
+          .catch((err) => next(err))
+    }
+
+    const deleteRoom = (req, res, next) => {
+        deleteById(req.user.email, req.params.id, dbRepository)
+          .then(() => {
+              return res.json({
+                  message: 'Delete success'
+              })
+          })
+          .catch((err) => next(err))
+    }
+
     return {
         fetchRoomByProperty,
-        createRoom
+        createRoom,
+        fetchRoomById,
+        fetchRoomByMember,
+        deleteRoom
     }
 }
