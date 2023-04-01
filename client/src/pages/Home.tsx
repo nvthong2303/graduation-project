@@ -6,6 +6,11 @@ import * as lottieJson from '../assets/animation/work.json';
 import Footer from '../components/Footer';
 import { Grid, Button } from '@mui/material';
 import LoginRegister from "../components/LoginRegister";
+import { useDispatch, useSelector } from "react-redux";
+import {GetInfoApi} from "../apis/user.api";
+import {getInfoUserSuccess} from "../store/action/user.action";
+import {GetListRoomApi} from "../apis/room.api";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -18,54 +23,78 @@ const useStyles = makeStyles({
 
 export default function HomePage() {
     const classes = useStyles();
+    const [isLogin, setIsLogin] = React.useState(false);
+    const user = useSelector((state: any) => state.userReducer.userInfo);
+    const history = useHistory();
+
+    React.useEffect(() => {
+        if (user.email) {
+            setIsLogin(true)
+        } else {
+            setIsLogin(false)
+        }
+    }, [user.email])
 
     return (
         <div className={classes.root}>
-            <HeaderHome />
-            <Grid container spacing={2}>
-                <Grid item xs={9}>
-                    <div style={{ paddingBottom: '24px', paddingTop: '56px', height: '600px', width: '100%' }}>
-                        <Player
-                            controls={false}
-                            autoplay
-                            loop
-                            src={lottieJson}
-                            style={{ width: '30%' }}
-                        ></Player>
-                        <div
-                            style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                fontSize: 20,
-                                fontWeight: 700
-                            }}
-                        >
-                            Welcome to My Graduation Project
-                        </div>
-                        <div
-                            style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                fontSize: 14,
-                                fontWeight: 400
-                            }}
-                        >
-                            Let's explore my graduation project, invite your friends and create your own meeting room
-                        </div>
-                        <Button sx={{ marginTop: '24px' }}>Let's join</Button>
-                    </div>
-                </Grid>
-                <Grid item xs={3}>
-                    <div style={{
-                        width: '100%',
-                        height: '100%',
-                        padding: '24px 16px 32px 0px'
-                    }}>
-                        <LoginRegister />
-                    </div>
-                </Grid>
-            </Grid>
-            <Footer />
+             <>
+                 <HeaderHome />
+                 <Grid container spacing={2}>
+                     <Grid item xs={isLogin ? 12 : 9}>
+                         <div style={{ paddingBottom: '24px', paddingTop: '56px', height: 'auto', width: '100%', minHeight: '600px' }}>
+                             <Player
+                                 controls={false}
+                                 autoplay
+                                 loop
+                                 src={lottieJson}
+                                 style={{ width: '30%' }}
+                             ></Player>
+                             <div
+                                 style={{
+                                     width: '100%',
+                                     textAlign: 'center',
+                                     fontSize: 20,
+                                     fontWeight: 700
+                                 }}
+                             >
+                                 Welcome to My Graduation Project
+                             </div>
+                             <div
+                                 style={{
+                                     width: '100%',
+                                     textAlign: 'center',
+                                     fontSize: 14,
+                                     fontWeight: 400
+                                 }}
+                             >
+                                 Let's explore my graduation project, invite your friends and create your own meeting room
+                             </div>
+                             {isLogin ? (
+                                 <Button
+                                     sx={{ marginTop: '24px' }}
+                                     onClick={() => {
+                                         history.push('/group')
+                                     }}
+                                 >
+                                     Let's join
+                                 </Button>
+                             ) : null}
+                         </div>
+                     </Grid>
+                     {!isLogin ? (
+                         <Grid item xs={3}>
+                             <div style={{
+                                 width: '100%',
+                                 height: '100%',
+                                 padding: '24px 16px 32px 0px'
+                             }}>
+                                 <LoginRegister />
+                             </div>
+                         </Grid>
+                     ) : null}
+                 </Grid>
+                 <Footer />
+             </>
         </div>
     )
 }

@@ -6,11 +6,12 @@ import LockIcon from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
-import teamsIcon from '../assets/images/streaming.png'
-
+import teamsIcon from '../assets/images/streaming.png';
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {LoginApi, RegisterApi} from "../apis/user.api";
+import { getInfoUserSuccess } from "../store/action/user.action";
 
 const useStyles = makeStyles({
     root: {
@@ -28,8 +29,11 @@ const useStyles = makeStyles({
         width: '48px',
         height: 'auto'
     },
+    form: {
+        width: '100%'
+    },
     input: {
-        width: '300px',
+        width: '100%',
     },
     button: {
         marginTop: '48px',
@@ -47,6 +51,7 @@ function LoginRegister() {
     const [showPassword, setShowPassword] = React.useState(false);
     const [rememberMe, setRememberMe] = React.useState(false);
     const classes = useStyles();
+    const dispatch = useDispatch();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -56,8 +61,8 @@ function LoginRegister() {
 
     const formikLogin = useFormik({
         initialValues: {
-            email: "",
-            password: "",
+            email: "nvthong2303@gmail.com",
+            password: "123456",
         },
         validationSchema: Yup.object({
             email: Yup.string()
@@ -117,7 +122,9 @@ function LoginRegister() {
         const res = await LoginApi(data)
 
         if (res.status === 200) {
-
+            localStorage.setItem('_token_', res.data.token);
+            localStorage.setItem('_user_id_', res.data.user._id);
+            dispatch(getInfoUserSuccess(res.data))
         } else {
 
         }
@@ -141,7 +148,7 @@ function LoginRegister() {
         <div className={classes.root}>
             <img className={classes.teamsIcon} src={teamsIcon} />
             {type === 'login' ? (
-                <div>
+                <div className={classes.form}>
                     <form onSubmit={formikLogin.handleSubmit}>
                         <Typography variant='h5'>Sign In</Typography>
                         <TextField

@@ -1,6 +1,7 @@
 // user action
 export const GET_INFO_USER_REQ = 'GET_INFO_USER_REQ';
 export const GET_INFO_USER_SUCCESS = 'GET_INFO_USER_SUCCESS';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 // room action
 export const GET_LIST_ROOM_REQ = 'GET_LIST_ROOM_REQ';

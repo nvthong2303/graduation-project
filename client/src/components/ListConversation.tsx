@@ -49,7 +49,7 @@ export default function ListConversation() {
     const handleSelectRoom = (room: room) => {
         console.log(room)
         dispatch(selectRoom(room))
-        history.push(`${PATHS.WORK}/${room.roomId}`);
+        history.push(`${PATHS.CHAT}/${room.roomId}`);
     }
 
     return(

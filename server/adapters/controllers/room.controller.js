@@ -9,9 +9,6 @@ import {
     deleteById,
     updateTitle
 } from "../../applications/use_case/roomChat/roomChat";
-import {
-    findByProperty as findUser
-} from "../../applications/use_case/user/user"
 
 
 export default function roomController(

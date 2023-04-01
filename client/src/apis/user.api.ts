@@ -29,5 +29,19 @@ export const LoginApi = async (body: any) => {
     return response;
 }
 
+export const GetInfoApi = async (id: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/users/${id}`,
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    let response = await axios(configs);
+    return response;
+}
+
 
 

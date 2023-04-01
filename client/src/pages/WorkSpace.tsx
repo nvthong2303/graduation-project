@@ -1,101 +1,97 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {useRouteMatch} from "react-router-dom";
+import {useHistory, useRouteMatch} from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
-import {Grid, Typography} from '@mui/material';
-import {Player} from "@lottiefiles/react-lottie-player";
+import {Box, Button, Divider} from '@mui/material';
 
 import Header from "../components/Header";
-import ListConversation from "../components/ListConversation";
-import ChatDetail from "../components/ChatDetail";
-import {PATHS} from "../constants/paths";
-import * as lottieJson from "../assets/animation/meeting.json";
+import {GetListRoomApi} from "../apis/room.api";
+import AddIcon from '@mui/icons-material/Add';
+import Group from "../components/group/group";
 
 const useStyles = makeStyles({
     root: {
-        backgroundColor: '#032056',
+        backgroundColor: '#a4c4ff',
         width: '100%',
         height: '100%',
         overflow: 'hidden'
     },
     workSpace: {
-        height: 'calc(100vh - 24px)',
+        height: 'calc(100vh - 40px)',
         marginTop: 0,
-        overflow: 'hidden'
+        overflowY: 'hidden',
+        display: 'flex',
+        flexDirection: 'column'
     },
-    listConversation: {
-        padding: 0,
-        marginTop: 0,
-        maxHeight: '100%'
+    header: {
+        height: '56px',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        padding: '16px 48px'
     },
-    conversation: {
-        padding: 0,
-        marginTop: 0,
-        paddingLeft: '0 !important'
+    button: {
+        height: '24px'
     },
-    streaming: {
-        background: 'green',
-        padding: 0,
-        marginTop: 0
-    },
-    home: {
+    listRoom: {
+        display: 'flex',
+        padding: '24px',
         width: '100%',
         height: '100%',
-        flexDirection: 'column',
-        alignItems: 'center',
-        background: 'linear-gradient(45deg, #9cd8fb 30%, #ffffff 90%)',
+        flexFlow: 'row wrap',
+        overflowY: 'auto'
     }
 });
 
 export default function WorkSpace() {
     const classes = useStyles();
     const match = useRouteMatch();
-
-    const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom)
+    const [listRoom, setListRoom] = React.useState([]);
+    const history = useHistory();
 
     React.useEffect(() => {
-        if (match.path === PATHS.WORK) {
-            console.log('asdasdasd')
+        const userId = localStorage.getItem('_user_id_')
+        const token = localStorage.getItem('_token_')
+        if (userId && token) {
+            handleGetListRoom(token)
+        } else {
+            history.push('/')
         }
     }, [])
+
+    const handleGetListRoom = async (token: string) => {
+        const res = await GetListRoomApi(token)
+        if (res.status === 200) {
+            setListRoom(res.data);
+        }
+    }
+
+    const handleOpenPopupCreate = () => {
+
+    }
 
     return (
         <div className={classes.root}>
             <Header />
-            <Grid className={classes.workSpace} container spacing={2}>
-                <Grid className={classes.listConversation} item xs={0.6}>
-                    <ListConversation />
-                </Grid>
-                {match.path === PATHS.WORK ? (
-                        <Grid className={classes.home} item xs={11.4}>
-                            <Player
-                                controls={false}
-                                autoplay
-                                loop
-                                src={lottieJson}
-                                style={{ width: '40%' }}
-                            ></Player>
-                            <Typography variant='subtitle1' style={{
-                                width: '100%',
-                                textAlign: 'center',
-                                fontSize: 20,
-                                fontWeight: 700
-                            }}>
-                                Pick a conversation and start exploring.
-                            </Typography>
-                        </Grid>
-                    ) : (
-                    <>
-                        <Grid className={classes.conversation} item xs={3.4}>
-                            <ChatDetail room={currentRoom} />
-                        </Grid>
-                        <Grid className={classes.streaming} item xs={8}>
-                            c
-                        </Grid>
-                    </>
-                )}
-            </Grid>
+            <Box className={classes.workSpace}>
+                <div className={classes.header}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        size="small"
+                        endIcon={<AddIcon />}
+                        onClick={handleOpenPopupCreate}
+                    >
+                        Create group
+                    </Button>
+                </div>
+                <Divider />
+                <div className={classes.listRoom}>
+                    {listRoom.map((el, index) => (
+                        <Group key={index} room={el} />
+                    ))}
+                </div>
+            </Box>
         </div>
     )
 }

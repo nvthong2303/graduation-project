@@ -10,3 +10,8 @@ export const getInfoUserSuccess = (data: Object) => ({
         data
     }
 });
+export const logoutSuccess = () => ({
+    type: types.LOGOUT_SUCCESS,
+    payload: {}
+});
+

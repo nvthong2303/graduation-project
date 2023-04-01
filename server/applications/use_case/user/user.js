@@ -74,7 +74,8 @@ function login(email, password, userRepository, authService) {
                     email: user[0].email
                 }
             }
-            return authService.generateToken(payload)
+            const token = authService.generateToken(payload)
+          return { token, user: user[0] }
         })
 }
 

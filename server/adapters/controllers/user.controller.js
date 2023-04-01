@@ -64,7 +64,7 @@ export default function userController(
     const loginUser = (req, res, next) => {
         const { email, password } = req.body;
         login(email, password, dbRepository, authService)
-            .then((token) => res.json(token))
+            .then((user) => res.json(user))
             .catch((err) => next(err))
     }
 

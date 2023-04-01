@@ -7,6 +7,7 @@ import {
 import { PATHS } from "../constants/paths";
 import HomePage from "../pages/Home";
 import WorkSpace from "../pages/WorkSpace";
+import Chat from "../pages/Chat";
 
 export default function Routes() {
     return (
@@ -15,7 +16,10 @@ export default function Routes() {
                 <Route exact path={[PATHS.HOME]} >
                     <HomePage />
                 </Route>
-                <Route exact path={[PATHS.WORK, PATHS.ROOM]} >
+                <Route exact path={[PATHS.CHAT, PATHS.CHAT_DETAIL]} >
+                    <Chat />
+                </Route>
+                <Route exact path={[PATHS.GROUP]} >
                     <WorkSpace />
                 </Route>
             </Switch>

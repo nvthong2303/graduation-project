@@ -1,12 +1,14 @@
 import * as types from '../../constants/action';
 import _ from 'lodash';
+import {LOGOUT_SUCCESS} from "../../constants/action";
 
 const initialState = {
     userInfo: {
-        email: 'nvthong2303gmail.com',
-        token: '1234567890',
-        fullName: 'Nguyen Van Thong',
-        userId: '2303'
+        email: '' as string || null,
+        token: '' as string || null,
+        fullName: '' as string || null,
+        userId: '' as string || null,
+        role: '' as string || null
     }
 }
 
@@ -15,7 +17,25 @@ export const userReducer = (state = initialState, action: any) => {
         case types.GET_INFO_USER_SUCCESS: {
             let { data } = action.payload;
             let newState = _.cloneDeep(state);
-            newState.userInfo = _.cloneDeep(data);
+            newState.userInfo = {
+                email: action.payload.data.user.email,
+                token: action.payload.data.token,
+                fullName: action.payload.data.user.username,
+                userId: action.payload.data.user._id,
+                role: action.payload.data.user.role,
+            };
+            return newState;
+        }
+
+        case types.LOGOUT_SUCCESS: {
+            let newState = _.cloneDeep(state);
+            newState.userInfo = {
+                email: null,
+                token: null,
+                fullName: null,
+                userId: null,
+                role: null,
+            };
             return newState;
         }
         default:
