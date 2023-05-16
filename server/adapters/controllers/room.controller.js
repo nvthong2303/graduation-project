@@ -60,6 +60,7 @@ export default function roomController(
                 return res.json(room);
             })
             .catch((err) => {
+                console.log('err controller create room', err)
                 next(err)
             })
     }

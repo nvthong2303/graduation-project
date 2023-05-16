@@ -1,14 +1,14 @@
-import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch, useLocation, useHistory } from 'react-router-dom';
 
-import {makeStyles} from "@mui/styles";
-import {Avatar, Tooltip} from '@mui/material';
+import { makeStyles } from "@mui/styles";
+import { Avatar, Tooltip } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import {room} from "../store/reducer/room.reducer";
-import {selectRoom} from "../store/action/room.action";
-import {PATHS} from "../constants/paths";
+import { room } from "../store/reducer/room.reducer";
+import { selectRoom } from "../store/action/room.action";
+import { PATHS } from "../constants/paths";
 
 const useStyles = makeStyles({
     root: {
@@ -44,6 +44,10 @@ export default function ListConversation() {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    useEffect(() => {
+        console.log(listRoom)
+    }, [listRoom.length])
+
     const classes = useStyles()
 
     const handleSelectRoom = (room: room) => {
@@ -52,7 +56,7 @@ export default function ListConversation() {
         history.push(`${PATHS.CHAT}/${room.roomId}`);
     }
 
-    return(
+    return (
         <>
             <div className={classes.root}>
                 {listRoom
@@ -60,22 +64,22 @@ export default function ListConversation() {
                         return (b.timestamp - a.timestamp)
                     })
                     .map((room: any) => {
-                    return (
-                        <Tooltip title={room.title} placement="right-start">
-                            <Avatar
-                                sx={{
-                                    marginTop: '4px',
-                                    border: '1px solid #000000',
-                                    boxShadow: 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
-                                }}
-                                className={classes.hoverPointer}
-                                onClick={() => {
-                                    handleSelectRoom(room)
-                                }}
-                            >{room.title[0]}</Avatar>
-                        </Tooltip>
-                    )
-                })}
+                        return (
+                            <Tooltip title={room.title} placement="right-start">
+                                <Avatar
+                                    sx={{
+                                        marginTop: '4px',
+                                        border: '1px solid #000000',
+                                        boxShadow: 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
+                                    }}
+                                    className={classes.hoverPointer}
+                                    onClick={() => {
+                                        handleSelectRoom(room)
+                                    }}
+                                >{room.title[0]}</Avatar>
+                            </Tooltip>
+                        )
+                    })}
             </div>
             <SettingsIcon sx={{
                 width: '32px',

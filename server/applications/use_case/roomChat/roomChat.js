@@ -30,10 +30,9 @@ function createRoom(
     if (newRoom.members.length < 2 ) {
         throw new Error('room must be has more 2 member')
     }
-
     return roomRepository.findByProperty({ title: newRoom.title })
       .then((roomWithTitle) => {
-          if (roomWithTitle.length) {
+          if (roomWithTitle?.length) {
               throw new Error(`Room with title: ${newRoom.title} already exist`);
           }
           const _newRoom = room(
@@ -49,6 +48,9 @@ function createRoom(
           )
           return roomRepository.createRoom(_newRoom)
       })
+        .catch(err => {
+            console.log('err repo create room', err)
+        })
 }
 
 function updateLastMessage(roomId, message, sender, roomRepository) {

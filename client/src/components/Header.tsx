@@ -16,9 +16,9 @@ import { makeStyles } from '@mui/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import teamsIcon from '../assets/images/streaming.png'
 import { useDispatch, useSelector } from 'react-redux';
-import {GetInfoApi} from "../apis/user.api";
-import {getInfoUserSuccess, logoutSuccess} from "../store/action/user.action";
-import {useHistory} from "react-router-dom";
+import { GetInfoApi } from "../apis/user.api";
+import { getInfoUserSuccess, logoutSuccess } from "../store/action/user.action";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
     header: {
@@ -76,7 +76,6 @@ export default function Header(props: any) {
         const res = await GetInfoApi(id, token)
 
         if (res.status === 200) {
-            console.log(res.data)
             dispatch(getInfoUserSuccess({
                 user: res.data,
                 token

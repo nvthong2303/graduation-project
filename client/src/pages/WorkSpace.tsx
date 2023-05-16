@@ -1,12 +1,12 @@
 import React from 'react';
-import {useSelector} from "react-redux";
-import {useHistory, useRouteMatch} from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
-import {Box, Button, Divider} from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 
 import Header from "../components/Header";
-import {GetListRoomApi} from "../apis/room.api";
+import { GetListRoomApi } from "../apis/room.api";
 import AddIcon from '@mui/icons-material/Add';
 import Group from "../components/group/group";
 
@@ -63,6 +63,8 @@ export default function WorkSpace() {
         const res = await GetListRoomApi(token)
         if (res.status === 200) {
             setListRoom(res.data);
+        } else {
+            history.push('/')
         }
     }
 
