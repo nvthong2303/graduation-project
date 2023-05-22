@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import { GetListRoomApi } from "../apis/room.api";
 import AddIcon from '@mui/icons-material/Add';
 import Group from "../components/group/group";
+import {getListRoomSuccess} from "../store/action/room.action";
 
 const useStyles = makeStyles({
     root: {
@@ -46,27 +47,9 @@ const useStyles = makeStyles({
 export default function WorkSpace() {
     const classes = useStyles();
     const match = useRouteMatch();
-    const [listRoom, setListRoom] = React.useState([]);
+    const dispatch = useDispatch();
+    const listRoom = useSelector((state: any) => state.roomReducer.listRoom) as any;
     const history = useHistory();
-
-    React.useEffect(() => {
-        const userId = localStorage.getItem('_user_id_')
-        const token = localStorage.getItem('_token_')
-        if (userId && token) {
-            handleGetListRoom(token)
-        } else {
-            history.push('/')
-        }
-    }, [])
-
-    const handleGetListRoom = async (token: string) => {
-        const res = await GetListRoomApi(token)
-        if (res.status === 200) {
-            setListRoom(res.data);
-        } else {
-            history.push('/')
-        }
-    }
 
     const handleOpenPopupCreate = () => {
 
@@ -89,7 +72,7 @@ export default function WorkSpace() {
                 </div>
                 <Divider />
                 <div className={classes.listRoom}>
-                    {listRoom.map((el, index) => (
+                    {listRoom.map((el: any, index: any) => (
                         <Group key={index} room={el} />
                     ))}
                 </div>

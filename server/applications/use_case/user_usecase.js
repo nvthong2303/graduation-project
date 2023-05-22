@@ -1,4 +1,4 @@
-import user from '../../../src/entities/user';
+import user from '../../src/entities/user';
 
 function addUser(
     username,

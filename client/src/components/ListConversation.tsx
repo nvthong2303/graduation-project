@@ -51,9 +51,9 @@ export default function ListConversation() {
     const classes = useStyles()
 
     const handleSelectRoom = (room: room) => {
-        console.log(room)
         dispatch(selectRoom(room))
-        history.push(`${PATHS.CHAT}/${room.roomId}`);
+        console.log(room)
+        history.push(`${PATHS.CHAT}/${room._id}`);
     }
 
     return (

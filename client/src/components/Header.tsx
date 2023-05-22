@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GetInfoApi } from "../apis/user.api";
 import { getInfoUserSuccess, logoutSuccess } from "../store/action/user.action";
 import { useHistory } from "react-router-dom";
+import {GetListRoomApi} from "../apis/room.api";
+import {getListRoomSuccess} from "../store/action/room.action";
 
 const useStyles = makeStyles({
     header: {
@@ -72,6 +74,28 @@ export default function Header(props: any) {
         }
     }, [])
 
+    React.useEffect(() => {
+        const userId = localStorage.getItem('_user_id_')
+        const token = localStorage.getItem('_token_')
+        if (userId && token && !infoUser.fullName) {
+            handleGetInfo(userId, token)
+        }
+        if (userId && token) {
+            handleGetListRoom(token)
+        } else {
+            history.push('/')
+        }
+    }, [])
+
+    const handleGetListRoom = async (token: string) => {
+        const res = await GetListRoomApi(token)
+        if (res.status === 200) {
+            dispatch(getListRoomSuccess(res.data))
+        } else {
+            history.push('/')
+        }
+    }
+
     const handleGetInfo = async (id: string, token: string) => {
         const res = await GetInfoApi(id, token)
 
@@ -106,8 +130,8 @@ export default function Header(props: any) {
             } else if (newValue === 'group') {
                 history.push('/group');
             } else {
-                if (newValue === 'more') {
-                    history.push('/more')
+                if (newValue === 'general') {
+                    history.push('/general')
                 }
             }
         }
@@ -165,8 +189,8 @@ export default function Header(props: any) {
                             value="group"
                         />
                         <Tab
-                            label="More ..."
-                            value="more"
+                            label="General"
+                            value="general"
                         />
                     </Tabs>
                 </Box>

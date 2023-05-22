@@ -26,10 +26,31 @@ export default function HomePage() {
     const [isLogin, setIsLogin] = React.useState(false);
     const user = useSelector((state: any) => state.userReducer.userInfo);
     const history = useHistory();
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        const userId = localStorage.getItem('_user_id_')
+        const token = localStorage.getItem('_token_')
+        if (userId && token && !user.fullName) {
+            handleGetInfo(userId, token)
+        }
+    }, [])
+
+    const handleGetInfo = async (id: string, token: string) => {
+        const res = await GetInfoApi(id, token)
+
+        if (res.status === 200) {
+            dispatch(getInfoUserSuccess({
+                user: res.data,
+                token
+            }))
+        }
+    }
 
     React.useEffect(() => {
         if (user.email) {
             setIsLogin(true)
+            history.push('/group')
         } else {
             setIsLogin(false)
         }

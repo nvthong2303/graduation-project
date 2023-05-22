@@ -1,4 +1,4 @@
-import {addUser, findById, countAll, findUserByProperty, login} from "../../applications/use_case/user/user";
+import {addUser, findById, countAll, findUserByProperty, login} from "../../applications/use_case/user_usecase";
 
 export default function userController(
     userDbRepository,
@@ -22,7 +22,7 @@ export default function userController(
 
         // predefined query params (apart from dynamically) for pagination
         params.page = params.page ? parseInt(params.page, 10) : 1;
-        params.perPage = params.perPage ? parseInt(params.perPage, 10) : 10;
+        params.perPage = params.perPage ? parseInt(params.perPage, 10) : 20;
 
         findUserByProperty(params, dbRepository)
             .then((users) => {
@@ -66,7 +66,7 @@ export default function userController(
         login(email, password, dbRepository, authService)
             .then((user) => res.json(user))
             .catch((err) => next(err))
-    }
+    };
 
     return {
         fetchUsersByProperty,

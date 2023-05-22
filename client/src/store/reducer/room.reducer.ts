@@ -7,7 +7,8 @@ export interface room {
     roomId: string,
     ownerId: string,
     member?: any[],
-    timestamp: number
+    timestamp: number,
+    _id: string
 
 }
 

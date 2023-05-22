@@ -3,5 +3,5 @@ export const  PATHS = {
     CHAT: '/chat',
     CHAT_DETAIL: '/chat/:id',
     GROUP: '/group',
-    INFO: '/more'
+    GENERAL: '/general'
 }

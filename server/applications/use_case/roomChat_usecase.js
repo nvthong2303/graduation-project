@@ -1,4 +1,4 @@
-import room from '../../../src/entities/roomChat';
+import room from '../../src/entities/roomChat';
 
 function findByProperty(params, roomRepository) {
     return roomRepository.findByProperty(params)

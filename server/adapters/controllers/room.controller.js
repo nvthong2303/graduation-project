@@ -8,7 +8,7 @@ import {
     removeMember,
     deleteById,
     updateTitle
-} from "../../applications/use_case/roomChat/roomChat";
+} from "../../applications/use_case/roomChat_usecase";
 
 
 export default function roomController(

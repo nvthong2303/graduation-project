@@ -8,9 +8,12 @@ function omit(obj, ...props) {
 }
 
 export default function userRepositoryMongoDB() {
-    const findUserByProperty = (params) => UserModel.find(omit(params, 'page', 'perPage'))
-        .skip(params.perPage * params.page - params.perPage)
-        .limit(params.perPage);
+    const findUserByProperty = (params) => {
+        const { username } = omit(params, 'page', 'perPage')
+        return UserModel.find({ username: new RegExp(username, 'i') })
+            .skip(params.perPage * params.page - params.perPage)
+            .limit(params.perPage)
+    };
 
     const countAll = (params) => UserModel.countDocuments(omit(params, 'page', 'perPage'));
 

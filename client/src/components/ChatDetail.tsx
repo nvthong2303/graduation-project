@@ -4,15 +4,17 @@ import {Typography, IconButton} from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HeaderChat from "./Chat/Header";
 import SendBox from "./Chat/SendBox";
+import ListMessage from "./Chat/ListMessage";
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
-        minHeight: '100%',
+        minHeight: 'calc(100vh - 40px)',
         background: 'linear-gradient(45deg, #9cd8fb 30%, #ffffff 90%)',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderRight: '2px solid black'
     },
     header: {
         height: '32px',
@@ -42,7 +44,7 @@ export default function ChatDetail(props: any) {
                 <HeaderChat room={room} />
             </div>
             <div className={classes.listMessage}>
-
+                <ListMessage />
             </div>
             <div className={classes.inputMessage}>
                 <SendBox />

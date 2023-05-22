@@ -8,6 +8,7 @@ import { PATHS } from "../constants/paths";
 import HomePage from "../pages/Home";
 import WorkSpace from "../pages/WorkSpace";
 import Chat from "../pages/Chat";
+import General from "../pages/General";
 
 export default function Routes() {
     return (
@@ -21,6 +22,9 @@ export default function Routes() {
                 </Route>
                 <Route exact path={[PATHS.GROUP]} >
                     <WorkSpace />
+                </Route>
+                <Route exact path={[PATHS.GENERAL]} >
+                    <General />
                 </Route>
             </Switch>
         </BrowserRouter>
