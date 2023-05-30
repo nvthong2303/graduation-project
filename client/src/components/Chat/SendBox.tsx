@@ -19,7 +19,8 @@ const useStyles = makeStyles({
     }
 })
 
-export default function SendBox() {
+export default function SendBox(props: any) {
+    const { room } = props
     const [contentMessage, setContentMessage] = React.useState('');
     const classes = useStyles();
 

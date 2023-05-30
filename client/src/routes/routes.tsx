@@ -9,8 +9,10 @@ import HomePage from "../pages/Home";
 import WorkSpace from "../pages/WorkSpace";
 import Chat from "../pages/Chat";
 import General from "../pages/General";
+import React from "react";
 
 export default function Routes() {
+
     return (
         <BrowserRouter>
             <Switch>

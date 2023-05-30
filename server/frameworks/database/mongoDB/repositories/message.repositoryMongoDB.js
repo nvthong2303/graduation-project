@@ -5,7 +5,7 @@ export default function messageRepositoryMongoDB() {
         return MessageModel.find({
             room: params.room
         })
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: 1 })
             .skip(parseInt(params.skip, 10))
             .limit(parseInt(params.limit, 10))
     }

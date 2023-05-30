@@ -5,6 +5,7 @@ export interface room {
     title: string,
     type: 'room' | 'user',
     roomId: string,
+    avatar: string,
     ownerId: string,
     member?: any[],
     timestamp: number,
@@ -13,7 +14,7 @@ export interface room {
 }
 
 const initialState = {
-    currentRoom: null,
+    currentRoom: {},
     listRoom: [] as room[]
 }
 

@@ -9,8 +9,8 @@ function omit(obj, ...props) {
 
 export default function userRepositoryMongoDB() {
     const findUserByProperty = (params) => {
-        const { username } = omit(params, 'page', 'perPage')
-        return UserModel.find({ username: new RegExp(username, 'i') })
+        const { email } = omit(params, 'page', 'perPage')
+        return UserModel.find({ email: new RegExp(email, 'i') })
             .skip(params.perPage * params.page - params.perPage)
             .limit(params.perPage)
     };

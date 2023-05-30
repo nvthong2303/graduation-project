@@ -9,15 +9,34 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { room } from "../store/reducer/room.reducer";
 import { selectRoom } from "../store/action/room.action";
 import { PATHS } from "../constants/paths";
+import {getSrcAvatarRoom} from "../common";
+
+export interface avatarMap {
+    [key: string]: any;
+}
+
+export const avatarMap: avatarMap = {
+    math: require('../assets/subjects/math.png').default,
+    algorithms: require('../assets/subjects/algorithms.png').default,
+    biology: require('../assets/subjects/biology.png').default,
+    blockchain: require('../assets/subjects/blockchain.png').default,
+    car: require('../assets/subjects/car.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+    // math: require('../assets/subjects/math.png').default,
+};
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
-        maxHeight: '92%',
-        minHeight: '92%',
+        height: '80% !important',
         overflowY: 'hidden',
-        paddingLeft: '6px',
-        paddingTop: '4px',
         background: 'linear-gradient(45deg, #032056 30%, #4e42ff 90%);',
         '&:hover': {
             overflowY: 'auto'
@@ -31,7 +50,7 @@ const useStyles = makeStyles({
         '&::-webkit-scrollbar-thumb': {
             background: '#bdbdbd',
             borderRadius: 5
-        }
+        },
     },
     hoverPointer: {
         '&:hover': {
@@ -40,53 +59,69 @@ const useStyles = makeStyles({
     }
 })
 export default function ListConversation() {
-    const listRoom: room[] = useSelector((state: any) => state.roomReducer.listRoom);
+    const classes = useStyles()
+    const listRoom: room[] = useSelector((state: any) => state.roomReducer?.listRoom);
     const dispatch = useDispatch();
     const history = useHistory();
 
-    useEffect(() => {
-        console.log(listRoom)
-    }, [listRoom.length])
-
-    const classes = useStyles()
-
     const handleSelectRoom = (room: room) => {
         dispatch(selectRoom(room))
-        console.log(room)
         history.push(`${PATHS.CHAT}/${room._id}`);
     }
 
     return (
-        <>
-            <div className={classes.root}>
+        <div style={{
+            minHeight: '100%',
+            maxHeight: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        }}>
+            <div
+                className={classes.root}
+                style={{
+                    maxHeight: '80% !important'
+                }}
+            >
                 {listRoom
                     .sort(function (a: room, b: room) {
                         return (b.timestamp - a.timestamp)
                     })
-                    .map((room: any) => {
+                    .map((room: any, index) => {
                         return (
-                            <Tooltip title={room.title} placement="right-start">
-                                <Avatar
-                                    sx={{
-                                        marginTop: '4px',
-                                        border: '1px solid #000000',
-                                        boxShadow: 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
-                                    }}
-                                    className={classes.hoverPointer}
-                                    onClick={() => {
-                                        handleSelectRoom(room)
-                                    }}
-                                >{room.title[0]}</Avatar>
-                            </Tooltip>
+                            <div key={index}>
+                                <Tooltip title={room.title} placement="right-start">
+                                    <Avatar
+                                        variant="square"
+                                        sx={{
+                                            margin: '8px',
+                                            border: '1px solid #000000',
+                                            boxShadow: 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
+                                        }}
+                                        className={classes.hoverPointer}
+                                        onClick={() => {
+                                            handleSelectRoom(room)
+                                        }}
+                                        src={getSrcAvatarRoom(room.avatar)}
+                                    />
+                                </Tooltip>
+                            </div>
                         )
                     })}
             </div>
-            <SettingsIcon sx={{
-                width: '32px',
-                height: '32px',
-                marginTop: '10px',
-                color: '#ffffff'
-            }} />
-        </>
+            <div style={{
+                width: '60px',
+                minHeight: '60px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <SettingsIcon sx={{
+                    width: '32px',
+                    height: '32px',
+                    color: '#ffffff'
+                }} />
+            </div>
+        </div>
     )
 }

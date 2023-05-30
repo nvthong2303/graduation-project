@@ -9,7 +9,7 @@ import ListMessage from "./Chat/ListMessage";
 const useStyles = makeStyles({
     root: {
         width: '100%',
-        minHeight: 'calc(100vh - 40px)',
+        height: 'calc(100vh - 40px)',
         background: 'linear-gradient(45deg, #9cd8fb 30%, #ffffff 90%)',
         display: 'flex',
         flexDirection: 'column',
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         borderRight: '2px solid black'
     },
     header: {
-        height: '32px',
+        height: '32px !important',
         width: '100%',
         display: 'flex',
         boxShadow: '0px 15px 10px -15px #111',
@@ -27,6 +27,7 @@ const useStyles = makeStyles({
         paddingRight: '16px'
     },
     listMessage: {
+        height: 'calc(100% - 80px) !important'
     },
     inputMessage: {
         height: '40px',
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 
 export default function ChatDetail(props: any) {
     const { room } = props;
-    const classes = useStyles()
+    const classes = useStyles();
 
     return (
         <div className={classes.root}>
@@ -44,10 +45,10 @@ export default function ChatDetail(props: any) {
                 <HeaderChat room={room} />
             </div>
             <div className={classes.listMessage}>
-                <ListMessage />
+                <ListMessage room={room} />
             </div>
             <div className={classes.inputMessage}>
-                <SendBox />
+                <SendBox room={room} />
             </div>
         </div>
     )

@@ -32,6 +32,7 @@ export default function HomePage() {
         const userId = localStorage.getItem('_user_id_')
         const token = localStorage.getItem('_token_')
         if (userId && token && !user.fullName) {
+            console.log('35')
             handleGetInfo(userId, token)
         }
     }, [])
