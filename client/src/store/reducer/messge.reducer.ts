@@ -2,10 +2,10 @@ import * as types from '../../constants/action';
 import _ from 'lodash';
 
 export interface message {
-    id: string,
+    _id?: string,
     content: string,
     sender: string,
-    createdAt: Date,
+    createdAt: string,
     room: string,
 }
 
@@ -22,11 +22,20 @@ export const messageReducer = (state = initialState, action: any) => {
             data.sort(function(a: message, b: message) {
                 var dateA = new Date(a.createdAt);
                 var dateB = new Date(b.createdAt);
-                return dateB.getTime() - dateA.getTime();
+                return dateA.getTime() - dateB.getTime();
             });
             newState.listMessage = _.uniqBy([...newState.listMessage, ...newListMsg], '_id');
             return newState;
         }
+
+        case types.SEND_MESSAGE_SUCCESS: {
+            let { data } = action.payload;
+            let newState = _.cloneDeep(state);
+            console.log(data)
+            newState.listMessage = [data, ...newState.listMessage]
+            return newState
+        }
+
         default:
             return state;
     }

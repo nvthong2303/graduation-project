@@ -89,7 +89,11 @@ export default function ListConversation() {
                     })
                     .map((room: any, index) => {
                         return (
-                            <div key={index}>
+                            <div key={index} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
                                 <Tooltip title={room.title} placement="right-start">
                                     <Avatar
                                         variant="square"

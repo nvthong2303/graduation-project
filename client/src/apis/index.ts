@@ -10,6 +10,7 @@ export const common = async () => {
         }
     };
 
+
     let response = await axios(configs);
     return response;
 };

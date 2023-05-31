@@ -10,3 +10,10 @@ export const getListMessageSuccess = (data: Object) => ({
         data
     }
 });
+
+export const sendMessageSuccess = (data: Object) => ({
+    type: types.SEND_MESSAGE_SUCCESS,
+    payload: {
+        data
+    }
+})

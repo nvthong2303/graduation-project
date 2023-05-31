@@ -14,6 +14,7 @@ import * as lottieJson from "../assets/animation/meeting.json";
 import * as waitingJson from "../assets/animation/waiting.json";
 import {GetDetailRoomById} from "../apis/room.api";
 import {getDetailRoomSuccess} from "../store/action/room.action";
+import SocketIO from "../socket/socket-io";
 
 const useStyles = makeStyles({
     root: {
@@ -161,6 +162,7 @@ export default function Chat() {
                     )}
                 </Grid>
             </Grid>
+            <SocketIO />
         </div>
     )
 }

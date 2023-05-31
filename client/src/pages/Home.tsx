@@ -16,8 +16,12 @@ const useStyles = makeStyles({
     root: {
         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
         width: '100%',
-        height: '100%',
-        overflow: 'hidden'
+        height: '100vh',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        overflowY: 'auto'
     },
 });
 
@@ -59,64 +63,62 @@ export default function HomePage() {
 
     return (
         <div className={classes.root}>
-             <>
-                 <HeaderHome />
-                 <Grid container spacing={2}>
-                     <Grid item xs={isLogin ? 12 : 9}>
-                         <div style={{ paddingBottom: '24px', paddingTop: '56px', height: 'auto', width: '100%', minHeight: '600px' }}>
-                             <Player
-                                 controls={false}
-                                 autoplay
-                                 loop
-                                 src={lottieJson}
-                                 style={{ width: '30%' }}
-                             ></Player>
-                             <div
-                                 style={{
-                                     width: '100%',
-                                     textAlign: 'center',
-                                     fontSize: 20,
-                                     fontWeight: 700
+             <HeaderHome />
+             <Grid container spacing={2}>
+                 <Grid item xs={isLogin ? 12 : 9}>
+                     <div style={{ paddingBottom: '24px', paddingTop: '56px', height: 'auto', width: '100%', minHeight: '600px' }}>
+                         <Player
+                             controls={false}
+                             autoplay
+                             loop
+                             src={lottieJson}
+                             style={{ width: '30%' }}
+                         ></Player>
+                         <div
+                             style={{
+                                 width: '100%',
+                                 textAlign: 'center',
+                                 fontSize: 20,
+                                 fontWeight: 700
+                             }}
+                         >
+                             Welcome to My Graduation Project
+                         </div>
+                         <div
+                             style={{
+                                 width: '100%',
+                                 textAlign: 'center',
+                                 fontSize: 14,
+                                 fontWeight: 400
+                             }}
+                         >
+                             Let's explore my graduation project, invite your friends and create your own meeting room
+                         </div>
+                         {isLogin ? (
+                             <Button
+                                 sx={{ marginTop: '24px' }}
+                                 onClick={() => {
+                                     history.push('/group')
                                  }}
                              >
-                                 Welcome to My Graduation Project
-                             </div>
-                             <div
-                                 style={{
-                                     width: '100%',
-                                     textAlign: 'center',
-                                     fontSize: 14,
-                                     fontWeight: 400
-                                 }}
-                             >
-                                 Let's explore my graduation project, invite your friends and create your own meeting room
-                             </div>
-                             {isLogin ? (
-                                 <Button
-                                     sx={{ marginTop: '24px' }}
-                                     onClick={() => {
-                                         history.push('/group')
-                                     }}
-                                 >
-                                     Let's join
-                                 </Button>
-                             ) : null}
+                                 Let's join
+                             </Button>
+                         ) : null}
+                     </div>
+                 </Grid>
+                 {!isLogin ? (
+                     <Grid item xs={3}>
+                         <div style={{
+                             width: '100%',
+                             height: '100%',
+                             padding: '24px 16px 32px 0px'
+                         }}>
+                             <LoginRegister />
                          </div>
                      </Grid>
-                     {!isLogin ? (
-                         <Grid item xs={3}>
-                             <div style={{
-                                 width: '100%',
-                                 height: '100%',
-                                 padding: '24px 16px 32px 0px'
-                             }}>
-                                 <LoginRegister />
-                             </div>
-                         </Grid>
-                     ) : null}
-                 </Grid>
-                 <Footer />
-             </>
+                 ) : null}
+             </Grid>
+             <Footer />
         </div>
     )
 }

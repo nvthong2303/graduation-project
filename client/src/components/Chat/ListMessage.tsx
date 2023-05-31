@@ -56,6 +56,7 @@ export default function ListMessage(props: any) {
     }, [room._id])
 
     React.useEffect(() => {
+        console.log(listMessage)
         if (total && total == listMessage.length)  {
             setHasMore(false)
         }
@@ -74,13 +75,10 @@ export default function ListMessage(props: any) {
     }
 
     function funcLoad() {
-        console.log('load more...')
         handleGetListMessage(listMessage.length, 20);
     }
 
     function renderMessageItems() {
-        console.log(infoUser)
-        console.log(listMessage)
         let messagesItems = listMessage.map((item: message, index) => {
             let position = item.sender === infoUser.email ? 'right' : 'left';
 

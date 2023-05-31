@@ -12,6 +12,7 @@ const useStyles = makeStyles({
         height: '172px',
         backgroundColor: '#26272b',
         color: '#ffff',
+        paddingTop: '16px'
     },
     flexColumn: {
         display: 'flex',
