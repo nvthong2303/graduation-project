@@ -43,5 +43,17 @@ export const GetInfoApi = async (id: string, token: string) => {
     return response;
 }
 
+export const SearchUserByUsername = async (keyword: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/users?username=${keyword}`,
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    };
 
+    let response = await axios(configs);
+    return response;
+}
 

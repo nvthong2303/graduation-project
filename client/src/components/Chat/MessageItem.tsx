@@ -41,6 +41,7 @@ interface PropsType {
     position?: 'left' | 'right';
     message?: string;
     timestamp?: string
+    sender: string
 }
 
 export default function MessageItem(props: PropsType) {
@@ -49,6 +50,7 @@ export default function MessageItem(props: PropsType) {
 
     const senderMessageStyle: any = {
         item: {
+            padding: '8px',
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'flex-end'
@@ -56,7 +58,7 @@ export default function MessageItem(props: PropsType) {
         box: {
             marginRight: 'auto',
             backgroundColor: '#e0e0e0',
-            borderRadius: '8px',
+            borderRadius: '16px',
             fontSize: 15,
             whiteSpace: 'pre-line',
             width: 'fit-content',
@@ -66,6 +68,7 @@ export default function MessageItem(props: PropsType) {
 
     const myMessageStyle: any = {
         item: {
+            padding: '8px',
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'flex-end',
@@ -75,7 +78,7 @@ export default function MessageItem(props: PropsType) {
             marginLeft: 'auto',
             backgroundColor: '#0084ff',
             color: 'white',
-            borderRadius: '8px',
+            borderRadius: '16px',
             fontSize: 15,
             whiteSpace: 'pre-line',
             width: 'fit-content',
@@ -85,22 +88,18 @@ export default function MessageItem(props: PropsType) {
 
 
     function renderAvatar() {
+        console.log(props)
         let avatarUrl = 'https://s120.avatar.talk.zdn.vn/default';
 
-        // if (props.src === '1') {
-        //     return (
-        //         <ListItemAvatar>
-        //             <Avatar src={avatarUrl} />
-        //         </ListItemAvatar>
-        //     );
-        // } else {
-        //     return <ListItemAvatar></ListItemAvatar>;
-        // }
-        return <Avatar>H</Avatar>
+        return (
+            <Tooltip title={props.sender} sx={{ marginRight: '8px' }}>
+                <Avatar>{props.sender[0]}</Avatar>
+            </Tooltip>
+        )
     }
 
     return (
-        <Box>
+        <Box className="huhuhuhuhuhuh">
             <ListItem
                 style={
                     props.position === 'right'

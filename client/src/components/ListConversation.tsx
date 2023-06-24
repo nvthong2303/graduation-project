@@ -10,27 +10,11 @@ import { room } from "../store/reducer/room.reducer";
 import { selectRoom } from "../store/action/room.action";
 import { PATHS } from "../constants/paths";
 import {getSrcAvatarRoom} from "../common";
+import {clearListMessage} from "../store/action/message.action";
 
 export interface avatarMap {
     [key: string]: any;
 }
-
-export const avatarMap: avatarMap = {
-    math: require('../assets/subjects/math.png').default,
-    algorithms: require('../assets/subjects/algorithms.png').default,
-    biology: require('../assets/subjects/biology.png').default,
-    blockchain: require('../assets/subjects/blockchain.png').default,
-    car: require('../assets/subjects/car.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-    // math: require('../assets/subjects/math.png').default,
-};
 
 const useStyles = makeStyles({
     root: {
@@ -66,6 +50,7 @@ export default function ListConversation() {
 
     const handleSelectRoom = (room: room) => {
         dispatch(selectRoom(room))
+        dispatch(clearListMessage())
         history.push(`${PATHS.CHAT}/${room._id}`);
     }
 

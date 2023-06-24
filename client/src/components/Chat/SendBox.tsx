@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {sendMessageSuccess} from "../../store/action/message.action";
 import {message} from "../../store/reducer/messge.reducer";
 import {SendMessage} from "../../apis/message.api";
+import { socketRef} from "../../socket/socket-io";
 
 const useStyles = makeStyles({
     root: {
@@ -34,25 +35,20 @@ export default function SendBox(props: any) {
         if (event.shiftKey && event.keyCode === 13) {
         } else if (event.keyCode === 13) {
             event.preventDefault();
-            const newMessage: message = {
-                content: contentMessage,
-                sender: infoUser.email,
-                room: room._id,
-                createdAt: new Date().toISOString(),
-            }
-            dispatch(sendMessageSuccess(newMessage))
-            handleSendMessage(newMessage, infoUser.token)
+            handleSendMessage()
         }
     }
 
-    const handleSendMessage = async (message: message, token: string) => {
-        const res = await SendMessage(message, token)
-
-        if (res.status === 200) {
-
-        } else {
-
+    const handleSendMessage = async () => {
+        const newMessage: message = {
+            content: contentMessage,
+            sender: infoUser.email,
+            senderName: infoUser.fullName,
+            room: room._id,
+            createdAt: new Date().toISOString(),
         }
+        socketRef.current?.emit("message", newMessage)
+        setContentMessage('')
     }
 
     return (
@@ -68,7 +64,7 @@ export default function SendBox(props: any) {
                 onChange={(event: any) => setContentMessage(event.target.value)}
                 value={contentMessage}
             />
-            <IconButton>
+            <IconButton onClick={handleSendMessage}>
                 <SendIcon />
             </IconButton>
         </div>

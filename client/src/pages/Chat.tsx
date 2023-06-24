@@ -12,9 +12,10 @@ import ChatDetail from "../components/ChatDetail";
 import {PATHS} from "../constants/paths";
 import * as lottieJson from "../assets/animation/meeting.json";
 import * as waitingJson from "../assets/animation/waiting.json";
-import {GetDetailRoomById} from "../apis/room.api";
+import {GetDetailChatByEmail, GetDetailRoomById} from "../apis/room.api";
 import {getDetailRoomSuccess} from "../store/action/room.action";
 import SocketIO from "../socket/socket-io";
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles({
     root: {
@@ -59,7 +60,8 @@ export default function Chat() {
     const match = useRouteMatch();
     const dispatch = useDispatch();
     // @ts-ignore
-    const { id } = useParams();
+    const { id, email } = useParams();
+    const { enqueueSnackbar } = useSnackbar();
 
     const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom)
 
@@ -67,17 +69,40 @@ export default function Chat() {
         if (match.path === PATHS.CHAT) {
             dispatch(getDetailRoomSuccess({}))
         } else {
-            handleGetDetailRoom(id)
+            if (match.path === PATHS.CHAT_DETAIL) {
+                handleGetDetailRoom(id)
+            } else {
+                handleGetDetailRoom(id)
+            }
         }
     }, [JSON.stringify(currentRoom)])
 
     const handleGetDetailRoom = async (id: string) => {
         const token = localStorage.getItem("_token_")
         if (token) {
-            const res = await GetDetailRoomById(id, token)
+            if (id) {
+                const res = await GetDetailRoomById(id, token)
 
-            if (res.status === 200) {
-                dispatch(getDetailRoomSuccess(res.data))
+                if (res.status === 200) {
+                    if (res.data) {
+                        dispatch(getDetailRoomSuccess(res.data))
+                    }
+                } else {
+                    enqueueSnackbar('Not found class', {
+                        variant: 'error'
+                    });
+                }
+            } else {
+                const res = await GetDetailChatByEmail(email, token)
+                if (res.status === 200) {
+                    if (res.data.data) {
+                        dispatch(getDetailRoomSuccess(res.data.data))
+                    }
+                } else {
+                    enqueueSnackbar('Not found class', {
+                        variant: 'error'
+                    });
+                }
             }
         }
     }
@@ -142,7 +167,7 @@ export default function Chat() {
                             </Grid>
                         </Grid>
                     ) : (
-                        <>
+                        <div style={{ height: '100vh' }}>
                             <Player
                                 controls={false}
                                 autoplay
@@ -158,7 +183,7 @@ export default function Chat() {
                             }}>
                                 Pick a conversation and start exploring.
                             </Typography>
-                        </>
+                        </div>
                     )}
                 </Grid>
             </Grid>

@@ -19,7 +19,7 @@ export default function Routes() {
                 <Route exact path={[PATHS.HOME]} >
                     <HomePage />
                 </Route>
-                <Route exact path={[PATHS.CHAT, PATHS.CHAT_DETAIL]} >
+                <Route exact path={[PATHS.CHAT, PATHS.CHAT_DETAIL, PATHS.CHAT_USER_DETAIL]} >
                     <Chat />
                 </Route>
                 <Route exact path={[PATHS.GROUP]} >

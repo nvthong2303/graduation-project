@@ -1,6 +1,5 @@
 import * as types from '../../constants/action';
 import _ from 'lodash';
-import {LOGOUT_SUCCESS} from "../../constants/action";
 
 const initialState = {
     userInfo: {

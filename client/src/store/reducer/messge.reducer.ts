@@ -5,6 +5,7 @@ export interface message {
     _id?: string,
     content: string,
     sender: string,
+    senderName: string,
     createdAt: string,
     room: string,
 }
@@ -31,8 +32,20 @@ export const messageReducer = (state = initialState, action: any) => {
         case types.SEND_MESSAGE_SUCCESS: {
             let { data } = action.payload;
             let newState = _.cloneDeep(state);
-            console.log(data)
             newState.listMessage = [data, ...newState.listMessage]
+            return newState
+        }
+
+        case types.RECEIVE_MESSAGE_SUCCESS: {
+            let { data } = action.payload;
+            let newState = _.cloneDeep(state);
+            newState.listMessage =  _.uniqBy([data, ...newState.listMessage], 'createdAt');
+            return newState
+        }
+
+        case types.CLEAR_LIST_MESSAGE: {
+            let newState = _.cloneDeep(state);
+            newState.listMessage = [];
             return newState
         }
 

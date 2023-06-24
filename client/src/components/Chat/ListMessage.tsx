@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getListMessageSuccess} from "../../store/action/message.action";
 // @ts-ignore
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Box, CircularProgress} from "@mui/material";
+import {Box, CircularProgress, Typography} from "@mui/material";
 import MessageItem from "./MessageItem";
 import {message} from "../../store/reducer/messge.reducer";
 
@@ -69,6 +69,10 @@ export default function ListMessage(props: any) {
             if (res.status === 200) {
                 dispatch(getListMessageSuccess(res.data.messages ?? []))
                 setTotal(res.data.total)
+
+                if (res.data.total === 0) {
+                    setHasMore(false)
+                }
             }
 
         }
@@ -87,10 +91,19 @@ export default function ListMessage(props: any) {
                     key={index}
                     position={position as any}
                     message={item.content}
+                    sender={item.senderName}
                 />
             );
         });
         return messagesItems;
+    }
+
+    function renderNoMessage() {
+        return (
+            <>
+                <Typography>{room.lastMessage}</Typography>
+            </>
+        )
     }
 
     return (
@@ -116,7 +129,7 @@ export default function ListMessage(props: any) {
                 }
                 scrollableTarget="scrollableDiv"
             >
-                {renderMessageItems()}
+                {listMessage.length > 0 ? renderMessageItems() : renderNoMessage()}
             </InfiniteScroll>
         </div>
     )

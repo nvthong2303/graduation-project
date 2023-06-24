@@ -72,7 +72,7 @@ export default function WorkSpace() {
                 </div>
                 <Divider />
                 <div className={classes.listRoom}>
-                    {listRoom.map((el: any, index: any) => (
+                    {listRoom.filter((el: any) => el.type !== 'chat').map((el: any, index: any) => (
                         <Group key={index} room={el} />
                     ))}
                 </div>

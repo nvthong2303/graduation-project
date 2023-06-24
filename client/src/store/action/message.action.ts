@@ -16,4 +16,15 @@ export const sendMessageSuccess = (data: Object) => ({
     payload: {
         data
     }
+});
+
+export const receiveMessageSuccess = (data: Object) => ({
+    type: types.RECEIVE_MESSAGE_SUCCESS,
+    payload: {
+        data
+    }
 })
+
+export const clearListMessage = () => ({
+    type: types.CLEAR_LIST_MESSAGE
+});

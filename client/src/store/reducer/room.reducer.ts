@@ -9,7 +9,8 @@ export interface room {
     ownerId: string,
     member?: any[],
     timestamp: number,
-    _id: string
+    _id: string,
+    unReadMessage: number
 
 }
 
