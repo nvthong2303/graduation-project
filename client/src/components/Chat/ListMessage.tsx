@@ -56,7 +56,6 @@ export default function ListMessage(props: any) {
     }, [room._id])
 
     React.useEffect(() => {
-        console.log(listMessage)
         if (total && total == listMessage.length)  {
             setHasMore(false)
         }

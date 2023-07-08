@@ -3,8 +3,7 @@ import io from 'socket.io-client';
 import {room} from "../store/reducer/room.reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {receiveMessageSuccess} from "../store/action/message.action";
-
-const SOCKET_SERVER_URL = "http://localhost:3002";
+import {SOCKET_SERVER_URL} from "../utils/config";
 
 const subRoom = [];
 
@@ -14,9 +13,25 @@ export default function SocketIO(props: any) {
     const listRoom: room[] = useSelector((state: any) => state.roomReducer?.listRoom);
     const currentRoom: room = useSelector((state: any) => state.roomReducer?.currentRoom);
     const dispatch = useDispatch();
+    const [connected, setConnected] = React.useState(false)
 
     React.useEffect(() => {
-        socketRef.current = io.connect(SOCKET_SERVER_URL);
+        if (!socketRef.current) {
+            socketRef.current = io.connect(SOCKET_SERVER_URL);
+        }
+
+        socketRef.current.on("connect", () => {
+            setConnected(true)
+        })
+
+        socketRef.current.on('connect_error', (error: any) => {
+            // isConnected = false;
+            console.log('connect socket failed:', error.message);
+            setTimeout(() => {
+                console.log("reConnect socket")
+                socketRef.current = io.connect(SOCKET_SERVER_URL);
+            }, 15000);
+        });
 
         socketRef.current?.emit("join", "hello world")
 
@@ -29,13 +44,13 @@ export default function SocketIO(props: any) {
     }, []);
 
     React.useEffect(() => {
-        console.log(currentRoom)
-        socketRef.current?.emit('join', currentRoom._id)
+        if (currentRoom._id) {
+            socketRef.current?.emit('join', currentRoom._id)
 
-        socketRef.current?.on('receiveMessage', (content: any) => {
-            console.log('///', content)
-            dispatch(receiveMessageSuccess(content))
-        });
+            socketRef.current?.on('receiveMessage', (content: any) => {
+                dispatch(receiveMessageSuccess(content))
+            });
+        }
     }, [JSON.stringify(currentRoom)])
 
     // React.useEffect(() => {

@@ -5,6 +5,7 @@ import App from './App/App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import {store} from "./store/store";
+import SocketIO from "./socket/socket-io";
 
 
 const root = ReactDOM.createRoot(

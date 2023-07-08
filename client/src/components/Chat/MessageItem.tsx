@@ -88,7 +88,6 @@ export default function MessageItem(props: PropsType) {
 
 
     function renderAvatar() {
-        console.log(props)
         let avatarUrl = 'https://s120.avatar.talk.zdn.vn/default';
 
         return (
