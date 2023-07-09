@@ -22,7 +22,7 @@ interface Props {
     muted?: boolean
 }
 
-export default function Video({ stream, muted }: Props) {
+export default function Video({ stream, muted, email }: Props) {
     const classes = useStyles();
     const ref = React.useRef<HTMLVideoElement>(null);
     const [isMuted, setIsMuted] = React.useState<boolean>(false);
@@ -35,6 +35,7 @@ export default function Video({ stream, muted }: Props) {
     return (
         <div className={classes.container}>
             <video className={classes.videoContainer} ref={ref} muted={isMuted} autoPlay />
+            <div>{email}</div>
         </div>
     )
 }

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 import Video from './videoReceive';
 import { WebRTCUser } from '../../common/interface';
+import {useSelector} from "react-redux";
 
 const pc_config = {
     iceServers: [
@@ -18,6 +19,7 @@ const pc_config = {
 const SOCKET_SERVER_URL = 'http://localhost:8080';
 
 const VideoCall_2P2 = () => {
+    const infoUser = useSelector((state: any) => state.userReducer.userInfo);
     const socketRef = useRef<SocketIOClient.Socket>();
     const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
     const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -37,7 +39,7 @@ const VideoCall_2P2 = () => {
             if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
             if (!socketRef.current) return;
             socketRef.current.emit('join_room', {
-                room: '1234',
+                room: '2303',
                 email: 'sample@naver.com',
             });
         } catch (e) {
@@ -184,17 +186,19 @@ const VideoCall_2P2 = () => {
         });
 
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
+            if (infoUser.email) {
+                if (socketRef.current) {
+                    socketRef.current.disconnect();
+                }
+                users.forEach((user) => {
+                    if (!pcsRef.current[user.id]) return;
+                    pcsRef.current[user.id].close();
+                    delete pcsRef.current[user.id];
+                });
             }
-            users.forEach((user) => {
-                if (!pcsRef.current[user.id]) return;
-                pcsRef.current[user.id].close();
-                delete pcsRef.current[user.id];
-            });
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [createPeerConnection, getLocalStream]);
+    }, [createPeerConnection, getLocalStream, JSON.stringify(infoUser)]);
 
     return (
         <div>
