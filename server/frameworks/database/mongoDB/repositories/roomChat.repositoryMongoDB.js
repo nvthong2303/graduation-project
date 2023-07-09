@@ -7,10 +7,12 @@ function omit(obj, ...props) {
 }
 
 export default function roomChatRepositoryMongoDB() {
-    const findByProperty = (params) => RoomModel.find(omit(params, 'page', 'perPage'))
-      .skip(params.perPage * params.page - params.perPage)
-      .limit(params.perPage)
-      .sort({updatedAt: 1});
+    const findByProperty = (params) => {
+        return RoomModel.find(omit(params, 'page', 'perPage'))
+            .skip(params.perPage * params.page - params.perPage)
+            .limit(params.perPage)
+            .sort({updatedAt: 1});
+    }
 
     const findById = (id) => RoomModel.findById(id);
 
@@ -24,7 +26,8 @@ export default function roomChatRepositoryMongoDB() {
             updatedAt: roomChatEntities.getUpdatedAt(),
             avatar: roomChatEntities.getAvatar(),
             description: roomChatEntities.getDescription(),
-            admin: roomChatEntities.getAdmin()
+            admin: roomChatEntities.getAdmin(),
+            type: roomChatEntities.getType()
         })
 
         return newRoom.save();

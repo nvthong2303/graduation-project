@@ -18,6 +18,7 @@ import SocketIO from "../socket/socket-io";
 import { useSnackbar } from 'notistack';
 import VideoCall from "../components/VideoCall/videoCall";
 import VideoCall_2P2 from "../components/VideoCall/VideoCall_2P2";
+import VideoCall_SF4 from "../components/VideoCall/VideoCall_SF4";
 
 const useStyles = makeStyles({
     root: {
@@ -152,7 +153,8 @@ export default function Chat() {
                             </Grid>
                             <Grid item xs={8.5}>
                                 {/*<VideoCall />*/}
-                                <VideoCall_2P2 />
+                                {/*<VideoCall_2P2 />*/}
+                                <VideoCall_SF4 />
                             </Grid>
                         </Grid>
                     ) : (

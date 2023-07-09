@@ -3,7 +3,9 @@ export default function connection(mongoose, config, options) {
         mongoose
             .connect(config.mongo.uri, options)
             .then(
-                () => {},
+                () => {
+                    console.log('Chat server connect mongoDB successfully')
+                },
                 (err) => {
                     console.log('mongoDB error', err)
                 }

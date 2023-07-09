@@ -7,7 +7,8 @@ import {
     addMember,
     removeMember,
     deleteById,
-    updateTitle
+    updateTitle,
+    createChatUserById
 } from "../../applications/use_case/roomChat_usecase";
 
 
@@ -68,7 +69,10 @@ export default function roomController(
     const fetchRoomById = (req, res, next) => {
         findById(req.params.id, dbRepository)
           .then((room) => {
-              res.json(room)
+              if (!room.members.includes(req.user.email)) {
+                  throw new Error('You are not in this class')
+              }
+              return res.json(room)
           })
           .catch((err) => next(err))
     }
@@ -77,6 +81,12 @@ export default function roomController(
         const params = {
             members: {
                 $in: [req.user.email]
+            },
+            title: new RegExp(req.query.title, 'i'),
+        }
+        if (req.query.isSearch) {
+            params.type = {
+                $ne: 'chat'
             }
         }
         findByProperty(params, dbRepository)
@@ -96,11 +106,47 @@ export default function roomController(
           .catch((err) => next(err))
     }
 
+    const createChatUserToUser = (req, res, next) => {
+        createChatUserById(req.user.id, req.body.userId, dbRepository, _userDbRepository)
+            .then((room) => {
+                return res.json({
+                    data: room
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+                return next(err)
+            })
+    }
+
+    const fetchRoomByEmail = (req, res, next) => {
+        const params = {
+            members: { $all: [req.params.email, req.user.email] },
+            type: "chat"
+        }
+
+        findByProperty(params, dbRepository)
+            .then((rooms) => {
+                if (rooms.length > 0) {
+                    return res.json({
+                        data: rooms[0]
+                    })
+                } else {
+                    return res.json({
+                        message: 'Not found this conversation'
+                    });
+                }
+            })
+            .catch((error) => next(error))
+    }
+
     return {
         fetchRoomByProperty,
         createRoom,
         fetchRoomById,
         fetchRoomByMember,
-        deleteRoom
+        deleteRoom,
+        createChatUserToUser,
+        fetchRoomByEmail
     }
 }

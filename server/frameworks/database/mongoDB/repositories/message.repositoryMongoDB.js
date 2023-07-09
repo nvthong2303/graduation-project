@@ -14,6 +14,7 @@ export default function messageRepositoryMongoDB() {
         const newMessage = new MessageModel({
             content: messageEntities.getContent(),
             sender: messageEntities.getSender(),
+            senderName: messageEntities.getSenderName(),
             room: messageEntities.getRoom(),
         })
 

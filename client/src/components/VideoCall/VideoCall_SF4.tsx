@@ -44,7 +44,7 @@ const VideoCall_SF4 = () => {
                 await pc.setLocalDescription(new RTCSessionDescription(sdp));
 
                 if (!socketRef.current) return;
-                socketRef.current.emit("receiverOffer", {
+                socketRef.current.emit("receiverOffer_SF4", {
                     sdp,
                     receiverSocketID: socketRef.current.id,
                     senderSocketID,
@@ -57,10 +57,6 @@ const VideoCall_SF4 = () => {
         []
     );
 
-    useEffect(() => {
-        console.log("======>", users)
-    }, [users.length])
-
     const createReceiverPeerConnection = useCallback((socketID: string) => {
         try {
             const pc = new RTCPeerConnection(pc_config);
@@ -72,7 +68,7 @@ const VideoCall_SF4 = () => {
             pc.onicecandidate = (e) => {
                 if (!(e.candidate && socketRef.current)) return;
                 // console.log("receiver PC onicecandidate");
-                socketRef.current.emit("receiverCandidate", {
+                socketRef.current.emit("receiverCandidate_SF4", {
                     candidate: e.candidate,
                     receiverSocketID: socketRef.current.id,
                     senderSocketID: socketID,
@@ -130,7 +126,12 @@ const VideoCall_SF4 = () => {
             );
 
             if (!socketRef.current) return;
-            socketRef.current.emit("senderOffer", {
+            console.log("all sender offer", {
+                sdp,
+                senderSocketID: socketRef.current.id,
+                roomID: "2303",
+            })
+            socketRef.current.emit("senderOffer_SF4", {
                 sdp,
                 senderSocketID: socketRef.current.id,
                 roomID: "2303",
@@ -145,8 +146,11 @@ const VideoCall_SF4 = () => {
 
         pc.onicecandidate = (e) => {
             if (!(e.candidate && socketRef.current)) return;
-            console.log("sender PC onicecandidate");
-            socketRef.current.emit("senderCandidate", {
+            console.log("sender PC onicecandidate", {
+                candidate: e.candidate,
+                senderSocketID: socketRef.current.id,
+            });
+            socketRef.current.emit("senderCandidate_SF4", {
                 candidate: e.candidate,
                 senderSocketID: socketRef.current.id,
             });
@@ -185,7 +189,7 @@ const VideoCall_SF4 = () => {
             createSenderPeerConnection();
             await createSenderOffer();
 
-            socketRef.current.emit("joinRoom", {
+            socketRef.current.emit("joinRoom_SF4", {
                 id: socketRef.current.id,
                 roomID: "2303",
             });
@@ -198,29 +202,27 @@ const VideoCall_SF4 = () => {
         socketRef.current = io.connect(SOCKET_SERVER_URL);
         getLocalStream();
 
-        socketRef.current.on("userEnter", (data: { id: string }) => {
+        socketRef.current.on("userEnter_SF4", (data: { id: string }) => {
             createReceivePC(data.id);
         });
 
         socketRef.current.on(
-            "allUsers",
+            "allUsers_SF4",
             (data: { users: Array<{ id: string }> }) => {
                 data.users.forEach((user) => createReceivePC(user.id));
             }
         );
 
-        socketRef.current.on("userExit", (data: { id: string }) => {
+        socketRef.current.on("user_exit", (data: { id: string }) => {
             closeReceivePC(data.id);
             setUsers((users) => users.filter((user) => user.id !== data.id));
         });
 
         socketRef.current.on(
-            "getSenderAnswer",
+            "getSenderAnswer_SF4",
             async (data: { sdp: RTCSessionDescription }) => {
                 try {
                     if (!sendPCRef.current) return;
-                    console.log("get sender answer");
-                    console.log(data.sdp);
                     await sendPCRef.current.setRemoteDescription(
                         new RTCSessionDescription(data.sdp)
                     );
@@ -231,15 +233,13 @@ const VideoCall_SF4 = () => {
         );
 
         socketRef.current.on(
-            "getSenderCandidate",
+            "getSenderCandidate_SF4",
             async (data: { candidate: RTCIceCandidateInit }) => {
                 try {
                     if (!(data.candidate && sendPCRef.current)) return;
-                    console.log("get sender candidate");
                     await sendPCRef.current.addIceCandidate(
                         new RTCIceCandidate(data.candidate)
                     );
-                    console.log("candidate add success");
                 } catch (error) {
                     console.log(error);
                 }
@@ -247,14 +247,12 @@ const VideoCall_SF4 = () => {
         );
 
         socketRef.current.on(
-            "getReceiverAnswer",
+            "getReceiverAnswer_SF4",
             async (data: { id: string; sdp: RTCSessionDescription }) => {
                 try {
-                    console.log(`getReceiverAnswer socketID(${data.id})'s answer`);
                     const pc: RTCPeerConnection = receivePCsRef.current[data.id];
                     if (!pc) return;
                     await pc.setRemoteDescription(data.sdp);
-                    console.log(`socketID(${data.id})'s set remote sdp success`);
                 } catch (error) {
                     console.log(error);
                 }
@@ -262,15 +260,12 @@ const VideoCall_SF4 = () => {
         );
 
         socketRef.current.on(
-            "getReceiverCandidate",
+            "getReceiverCandidate_SF4",
             async (data: { id: string; candidate: RTCIceCandidateInit }) => {
                 try {
-                    console.log(data);
-                    console.log(`getReceiverCandidate socketID(${data.id})'s candidate`);
                     const pc: RTCPeerConnection = receivePCsRef.current[data.id];
                     if (!(pc && data.candidate)) return;
                     await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                    console.log(`socketID(${data.id})'s candidate add success`);
                 } catch (error) {
                     console.log(error);
                 }

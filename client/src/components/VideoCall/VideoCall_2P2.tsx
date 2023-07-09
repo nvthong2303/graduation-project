@@ -38,7 +38,7 @@ const VideoCall_2P2 = () => {
             localStreamRef.current = localStream;
             if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
             if (!socketRef.current) return;
-            socketRef.current.emit('join_room', {
+            socketRef.current.emit('join_room_2P2', {
                 room: '2303',
                 email: 'sample@naver.com',
             });
@@ -54,7 +54,7 @@ const VideoCall_2P2 = () => {
             pc.onicecandidate = (e) => {
                 if (!(socketRef.current && e.candidate)) return;
                 console.log('onicecandidate');
-                socketRef.current.emit('candidate', {
+                socketRef.current.emit('candidate_2P2', {
                     candidate: e.candidate,
                     candidateSendID: socketRef.current.id,
                     candidateReceiveID: socketID,
@@ -99,7 +99,7 @@ const VideoCall_2P2 = () => {
         socketRef.current = io.connect(SOCKET_SERVER_URL);
         getLocalStream();
 
-        socketRef.current.on('all_users', (allUsers: Array<{ id: string; email: string }>) => {
+        socketRef.current.on('all_users_2P2', (allUsers: Array<{ id: string; email: string }>) => {
             allUsers.forEach(async (user) => {
                 if (!localStreamRef.current) return;
                 const pc = createPeerConnection(user.id, user.email);
@@ -112,7 +112,7 @@ const VideoCall_2P2 = () => {
                     });
                     console.log('create offer success');
                     await pc.setLocalDescription(new RTCSessionDescription(localSdp));
-                    socketRef.current.emit('offer', {
+                    socketRef.current.emit('offer_2P2', {
                         sdp: localSdp,
                         offerSendID: socketRef.current.id,
                         offerSendEmail: 'offerSendSample@sample.com',
@@ -125,7 +125,7 @@ const VideoCall_2P2 = () => {
         });
 
         socketRef.current.on(
-            'getOffer',
+            'getOffer_2P2',
             async (data: {
                 sdp: RTCSessionDescription;
                 offerSendID: string;
@@ -145,7 +145,7 @@ const VideoCall_2P2 = () => {
                         offerToReceiveAudio: true,
                     });
                     await pc.setLocalDescription(new RTCSessionDescription(localSdp));
-                    socketRef.current.emit('answer', {
+                    socketRef.current.emit('answer_2P2', {
                         sdp: localSdp,
                         answerSendID: socketRef.current.id,
                         answerReceiveID: offerSendID,
@@ -157,7 +157,7 @@ const VideoCall_2P2 = () => {
         );
 
         socketRef.current.on(
-            'getAnswer',
+            'getAnswer_2P2',
             (data: { sdp: RTCSessionDescription; answerSendID: string }) => {
                 const { sdp, answerSendID } = data;
                 console.log('get answer');
@@ -168,7 +168,7 @@ const VideoCall_2P2 = () => {
         );
 
         socketRef.current.on(
-            'getCandidate',
+            'getCandidate_2P2',
             async (data: { candidate: RTCIceCandidateInit; candidateSendID: string }) => {
                 console.log('get candidate');
                 const pc: RTCPeerConnection = pcsRef.current[data.candidateSendID];

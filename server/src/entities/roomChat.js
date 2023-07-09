@@ -1,4 +1,4 @@
-export default function roomChat(title, members, avatar, lastMessage, admin, lastSender, createdAt, updateAt, description) {
+export default function roomChat(title, members, avatar, lastMessage, admin, lastSender, createdAt, updateAt, description, type) {
     return {
         getTitle: () => title,
         getMembers: () => members,
@@ -8,6 +8,7 @@ export default function roomChat(title, members, avatar, lastMessage, admin, las
         getUpdatedAt: () => updateAt,
         getAvatar: () => avatar,
         getAdmin: () => admin,
-        getDescription: () => description
+        getDescription: () => description,
+        getType: () => type ?? 'class'
     }
 }

@@ -30,7 +30,7 @@ mongoDbConnection(mongoose, config, {
 
 // enabling CORS for some specific origins only.
 let corsOptions = {
-    origin : ['http://localhost:3000'],
+    origin : ['http://localhost:3000', 'http://localhost:3003'],
 }
 
 app.use(cors(corsOptions))

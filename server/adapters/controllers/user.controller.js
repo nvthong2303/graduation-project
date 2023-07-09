@@ -20,20 +20,10 @@ export default function userController(
             }
         }
 
-        // predefined query params (apart from dynamically) for pagination
-        params.page = params.page ? parseInt(params.page, 10) : 1;
-        params.perPage = params.perPage ? parseInt(params.perPage, 10) : 20;
-
         findUserByProperty(params, dbRepository)
             .then((users) => {
-                response.users = users;
-                return countAll(params, dbRepository);
-            })
-            .then((totalItems) => {
-                response.totalItems = totalItems;
-                response.totalPages = Math.ceil(totalItems / params.perPage);
-                response.perPage = params.perPage;
-                return res.json(response)
+                response.data = users.filter(el => el.email !== req.user.email);
+                return res.json(response);
             })
             .catch((error) => next(error));
     }

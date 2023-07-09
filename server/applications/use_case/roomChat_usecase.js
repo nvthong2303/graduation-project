@@ -1,4 +1,5 @@
 import room from '../../src/entities/roomChat';
+import user from "../../src/entities/user";
 
 function findByProperty(params, roomRepository) {
     return roomRepository.findByProperty(params)
@@ -18,6 +19,48 @@ function deleteById(email, id, roomRepository) {
             throw new Error('You dont have permission to delete this room')
           }
       })
+}
+
+function createChatUserById(creatorId, partnerId, roomRepository, userRepository) {
+    let creator;
+    return userRepository.findById(creatorId)
+        .then((_creator) => {
+            creator = _creator;
+            return userRepository.findById(partnerId)
+        })
+        .then((partner) => {
+            const _room = {
+                title: `${creator.username}-${partner.username}`,
+                members: [
+                    creator.email,
+                    partner.email,
+                ],
+                admin: creator.email,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                lastMessage: `${creator.username} start conversation`,
+                description: `${creator.username}-${partner.username}`,
+                lastSender: creator.email
+            }
+            const newRoom = room(
+                _room.title,
+                _room.members,
+                _room.avatar,
+                _room.lastMessage,
+                _room.admin,
+                _room.lastSender,
+                _room.createdAt,
+                _room.updatedAt,
+                _room.description,
+                'chat'
+            )
+            console.log(newRoom)
+            return roomRepository.createRoom(newRoom)
+        })
+        .catch(err => {
+            console.log('error when create room chat user to user', err)
+            throw new Error('Not found creator')
+        })
 }
 
 function createRoom(
@@ -83,5 +126,6 @@ export {
     updateTitle,
     addMember,
     removeMember,
-    getAdminRoomById
+    getAdminRoomById,
+    createChatUserById
 }

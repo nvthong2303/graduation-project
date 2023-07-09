@@ -9,10 +9,12 @@ function omit(obj, ...props) {
 
 export default function userRepositoryMongoDB() {
     const findUserByProperty = (params) => {
-        const { email } = omit(params, 'page', 'perPage')
-        return UserModel.find({ email: new RegExp(email, 'i') })
-            .skip(params.perPage * params.page - params.perPage)
-            .limit(params.perPage)
+        const { email, username } = omit(params, 'page', 'perPage')
+        if (email) {
+            return UserModel.find({ email: new RegExp(email, 'i') })
+        } else {
+            return UserModel.find({ username: new RegExp(username, 'i') })
+        }
     };
 
     const countAll = (params) => UserModel.countDocuments(omit(params, 'page', 'perPage'));

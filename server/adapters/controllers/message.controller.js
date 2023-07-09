@@ -34,9 +34,9 @@ export default function messageController(
     }
 
     const _sendMessage = (req, res, next) => {
-        const { sender, room, content } = req.body;
+        const { sender, room, content, senderName } = req.body;
 
-        sendMessage(room, sender, content, dbRepository)
+        sendMessage(room, sender, senderName, content, dbRepository)
             .then((message) => {
                 return res.json(message)
             })

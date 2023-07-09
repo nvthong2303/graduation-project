@@ -15,12 +15,14 @@ function fetchMessageByRoom(
 function sendMessage(
     room,
     sender,
+    senderName,
     content,
     messageRepository
 ) {
     const newMessage = new message(
         content,
         sender,
+        senderName,
         room
     )
     return messageRepository.sendMessage(newMessage)

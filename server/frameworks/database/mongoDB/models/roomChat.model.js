@@ -26,6 +26,10 @@ const RoomSchema = new Schema({
     description: {
         type: String,
         default: ''
+    },
+    type: {
+        type: String,
+        default: 'class'
     }
 })
 
