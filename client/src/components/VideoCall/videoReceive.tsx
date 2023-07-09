@@ -17,6 +17,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
+    email?: string;
     stream: MediaStream,
     muted?: boolean
 }

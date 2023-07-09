@@ -3,3 +3,4 @@
 # dependencies
 /client/node_modules
 /server/node_modules
+/socket-server/node_modules

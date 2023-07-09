@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
 import {useSelector} from "react-redux";
 import {Player} from "@lottiefiles/react-lottie-player";
-import * as waitingJson from "../../assets/animation/waiting.json";
+import waitingJson from "../../assets/animation/waiting.json";
 import {Button, Typography} from "@mui/material";
 import Video from "./videoReceive";
 import { socketRef } from '../../socket/socket-io';
@@ -41,7 +41,6 @@ export default function VideoCall(props: any) {
     const [users, setUsers] = useState<Array<WebRTCUser>>([]);
 
     useEffect(() => {
-        console.log("======>", users)
     }, [users.length])
 
     const localVideoRef = useRef<HTMLVideoElement>(null);
