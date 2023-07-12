@@ -87,9 +87,9 @@ const useStyles = makeStyles({
     }
 })
 
-interface User {
+export interface User {
     username: string;
-    email?: string;
+    email: string;
     role?: string;
     avatar?: string;
     _id?: string;
@@ -155,8 +155,10 @@ export default function Header(props: any) {
     React.useEffect(() => {
         if (window.location.href.includes('chat')) {
             setValue("chat")
-        } else if (window.location.href.includes('info')) {
-            setValue("more")
+        } else if (window.location.href.includes('group')) {
+            setValue("group")
+        } else if (window.location.href.includes('general')) {
+            setValue("general")
         }
     }, [window.location.href])
 
@@ -235,7 +237,8 @@ export default function Header(props: any) {
                             username: el.title,
                             avatar: el.avatar,
                             _id: el._id,
-                            type: 'class'
+                            type: 'class',
+                            email: ''
                         })
                     })
                     setListRooms(listRoom)
@@ -358,7 +361,12 @@ export default function Header(props: any) {
                 </div>
                 {/* center header */}
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', height: "40px !important" }}>
-                    <Tabs value={value} onChange={handleChange} centered sx={{ height: "40px !important", minHeight: "40px !important" }}>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        centered
+                        sx={{ height: "40px !important", minHeight: "40px !important" }}
+                    >
                         <Tab
                             label="Chat"
                             value="chat"

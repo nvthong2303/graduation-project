@@ -201,6 +201,132 @@ export const getSrcAvatarRoom = (avatar: string) => {
     }
 }
 
+export const listImageAvatar = [
+    {
+        src: biology,
+        title: 'biology'
+    },
+    {
+        src: algorithms,
+        title: 'algorithms'
+    },
+    {
+        src: blockchain,
+        title: 'blockchain'
+    },
+    {
+        src: car,
+        title: 'car'
+    },
+    {
+        src: chemistry,
+        title: 'chemistry'
+    },
+    {
+        src: computer,
+        title: 'computer'
+    },
+    {
+        src: crane,
+        title: 'crane'
+    },
+    {
+        src: sec,
+        title: 'sec'
+    },
+    {
+        src: economic,
+        title: 'economic'
+    },
+    {
+        src: education,
+        title: 'education'
+    },
+    {
+        src: energySystem,
+        title: 'energySystem'
+    },
+    {
+        src: eng,
+        title: 'eng'
+    },
+    {
+        src: engineer,
+        title: 'engineer'
+    },
+    {
+        src: finance,
+        title: 'finance'
+    },
+    {
+        src: hust,
+        title: 'hust'
+    },
+    {
+        src: IOT,
+        title: 'IOT'
+    },
+    {
+        src: literature,
+        title: 'literature'
+    },
+    {
+        src: manager,
+        title: 'manager'
+    },
+    {
+        src: math,
+        title: 'math'
+    },
+    {
+        src: medical,
+        title: 'medical'
+    },
+    {
+        src: medicine,
+        title: 'medicine'
+    },
+    {
+        src: microchip,
+        title: 'microchip'
+    },
+    {
+        src: nodejs,
+        title: 'nodejs'
+    },
+    {
+        src: meeting,
+        title: 'meeting'
+    },
+    {
+        src: physics,
+        title: 'physics'
+    },
+    {
+        src: position,
+        title: 'position'
+    },
+    {
+        src: react,
+        title: 'react'
+    },
+    {
+        src: science,
+        title: 'science'
+    },
+    {
+        src: software,
+        title: 'software'
+    },
+    {
+        src: suture,
+        title: 'suture'
+    },
+    {
+        src: technology,
+        title: 'technology'
+    },
+]
 
 
 export {}

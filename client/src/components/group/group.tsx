@@ -5,7 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import math from '../../assets/subjects/math.png';
-import {collapseString} from "../../common";
+import {collapseString, getSrcAvatarRoom} from "../../common";
 import {useDispatch} from "react-redux";
 import {selectRoom} from "../../store/action/room.action";
 import {useHistory} from "react-router-dom";
@@ -75,7 +75,7 @@ export default function Group(props: any) {
             </div>
 
             <div className={classes.media}>
-                <img className={classes.img} src={math} />
+                <img className={classes.img} src={getSrcAvatarRoom(room.avatar)} />
             </div>
 
             <div className={classes.action}>

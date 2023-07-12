@@ -3,13 +3,20 @@ import {useDispatch, useSelector} from "react-redux";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
-import { Box, Button, Divider } from '@mui/material';
+import {
+    Box,
+    Button,
+    Divider
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 import Header from "../components/Header";
-import { GetListRoomApi } from "../apis/room.api";
-import AddIcon from '@mui/icons-material/Add';
 import Group from "../components/group/group";
-import {getListRoomSuccess} from "../store/action/room.action";
+
+import {GetInfoApi} from "../apis/user.api";
+import {getInfoUserSuccess} from "../store/action/user.action";
+import DialogCreateRoom from "../components/Dialog/DialogCreateRoom";
+import Footer from "../components/Footer";
 
 const useStyles = makeStyles({
     root: {
@@ -49,10 +56,38 @@ export default function WorkSpace() {
     const match = useRouteMatch();
     const dispatch = useDispatch();
     const listRoom = useSelector((state: any) => state.roomReducer.listRoom) as any;
+    const user = useSelector((state: any) => state.userReducer.userInfo);
     const history = useHistory();
 
-    const handleOpenPopupCreate = () => {
+    const [openCreate, setOpenCreate] = React.useState(false)
 
+    React.useEffect(() => {
+        const userId = localStorage.getItem('_user_id_')
+        const token = localStorage.getItem('_token_')
+        if (userId && token && !user.fullName) {
+            handleGetInfo(userId, token)
+        }
+    }, [])
+
+    const handleGetInfo = async (id: string, token: string) => {
+        const res = await GetInfoApi(id, token)
+
+        if (res.status === 200) {
+            dispatch(getInfoUserSuccess({
+                user: res.data,
+                token
+            }))
+        } else {
+            history.push('/login')
+        }
+    }
+
+    const handleOpenPopupCreate = () => {
+        setOpenCreate(true)
+    }
+
+    const handleClosePopupCreate = () => {
+        setOpenCreate(false)
     }
 
     return (
@@ -77,6 +112,9 @@ export default function WorkSpace() {
                     ))}
                 </div>
             </Box>
+            {openCreate ? (
+                <DialogCreateRoom open={openCreate} onClose={handleClosePopupCreate} />
+            ) : null}
         </div>
     )
 }

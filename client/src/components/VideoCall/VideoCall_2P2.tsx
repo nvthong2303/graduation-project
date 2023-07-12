@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import Video from './videoReceive';
 import { WebRTCUser } from '../../common/interface';
 import {useSelector} from "react-redux";
+import {MEDIA_SERVER_URL} from "../../utils/config";
 
 const pc_config = {
     iceServers: [
@@ -96,7 +97,7 @@ const VideoCall_2P2 = () => {
     }, []);
 
     useEffect(() => {
-        socketRef.current = io.connect(SOCKET_SERVER_URL);
+        socketRef.current = io.connect(MEDIA_SERVER_URL);
         getLocalStream();
 
         socketRef.current.on('all_users_2P2', (allUsers: Array<{ id: string; email: string }>) => {
@@ -110,7 +111,6 @@ const VideoCall_2P2 = () => {
                         offerToReceiveAudio: true,
                         offerToReceiveVideo: true,
                     });
-                    console.log('create offer success');
                     await pc.setLocalDescription(new RTCSessionDescription(localSdp));
                     socketRef.current.emit('offer_2P2', {
                         sdp: localSdp,
@@ -214,7 +214,7 @@ const VideoCall_2P2 = () => {
                 autoPlay
             />
             {users.map((user, index) => (
-                <Video key={index} email={user?.email} stream={user.stream} />
+                <Video key={index} name={user?.email} stream={user.stream} />
             ))}
         </div>
     );

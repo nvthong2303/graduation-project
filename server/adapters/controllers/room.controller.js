@@ -33,8 +33,8 @@ export default function roomController(
         }
 
         // predefined query params (apart from dynamically) for pagination
-        params.page = params.page ? parseInt(params.page, 10) : 1;
-        params.perPage = params.perPage ? parseInt(params.perPage, 10) : 10;
+        params.skip = params.page ? parseInt(params.page, 10) : 1;
+        params.limit = params.perPage ? parseInt(params.perPage, 10) : 20;
 
         findByProperty(params, dbRepository)
             .then((rooms) => {
@@ -47,7 +47,7 @@ export default function roomController(
     const createRoom = (req, res, next) => {
         const newRoom = {
             title: req.body.title,
-            members: req.body.members,
+            members: [...req.body.members, req.user.email],
             avatar: req.body.avatar ?? 'none',
             admin: req.user.email,
             createdAt: new Date(),

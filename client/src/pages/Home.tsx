@@ -2,7 +2,7 @@ import React from 'react';
 import HeaderHome from "../components/HeaderHomePage";
 import { makeStyles } from "@mui/styles";
 import { Player } from '@lottiefiles/react-lottie-player';
-import * as lottieJson from '../assets/animation/work.json';
+import  lottieJson from '../assets/animation/work.json';
 import Footer from '../components/Footer';
 import { Grid, Button } from '@mui/material';
 import LoginRegister from "../components/LoginRegister";
@@ -36,7 +36,6 @@ export default function HomePage() {
         const userId = localStorage.getItem('_user_id_')
         const token = localStorage.getItem('_token_')
         if (userId && token && !user.fullName) {
-            console.log('35')
             handleGetInfo(userId, token)
         }
     }, [])
@@ -49,6 +48,8 @@ export default function HomePage() {
                 user: res.data,
                 token
             }))
+        } else {
+            history.push('/login')
         }
     }
 

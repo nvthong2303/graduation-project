@@ -68,5 +68,5 @@ app.get('/', (req, res) => {
 });
 
 server.listen(config.port, () => {
-    console.log(`listening on *:${config.port}`);
+    console.log(`socket-server is running on ${config.port}`);
 });

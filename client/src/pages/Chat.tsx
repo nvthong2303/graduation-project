@@ -18,7 +18,7 @@ import SocketIO from "../socket/socket-io";
 import { useSnackbar } from 'notistack';
 import VideoCall from "../components/VideoCall/videoCall";
 import VideoCall_2P2 from "../components/VideoCall/VideoCall_2P2";
-import VideoCall_SF4 from "../components/VideoCall/VideoCall_SF4";
+import VideoCall_SF4 from "../components/VideoCall/VideoCall_SFU";
 
 const useStyles = makeStyles({
     root: {
@@ -65,7 +65,7 @@ export default function Chat() {
     // @ts-ignore
     const { id, email } = useParams();
     const { enqueueSnackbar } = useSnackbar();
-
+    const infoUser = useSelector((state: any) => state.userReducer.userInfo);
     const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom)
 
     React.useEffect(() => {
@@ -142,7 +142,7 @@ export default function Chat() {
                         padding: '0px !important'
                     }}
                 >
-                    {Object.keys(currentRoom).length > 0 ? (
+                    {Object.keys(currentRoom).length > 0 && Object.keys(infoUser).length > 0 ? (
                         <Grid
                             container
                             spacing={1}
@@ -152,9 +152,9 @@ export default function Chat() {
                                 <ChatDetail room={currentRoom} />
                             </Grid>
                             <Grid item xs={8.5}>
-                                {/*<VideoCall />*/}
+                                <VideoCall />
                                 {/*<VideoCall_2P2 />*/}
-                                <VideoCall_SF4 />
+                                {/*<VideoCall_SF4 />*/}
                             </Grid>
                         </Grid>
                     ) : (
