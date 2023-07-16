@@ -12,10 +12,10 @@ let io = socketio.listen(server);
 app.use(cors());
 const PORT = process.env.PORT || 3003;
 
-let users = {};
-let receiverPCs = {};
-let senderPCs = {};
-let socketToRoom = {};
+let users = {}; // phong chua ai ?
+let receiverPCs = {}; // chua thong tin client
+let senderPCs = {}; // chua thong tin nhung nguoi nhan theo nguoi gui
+let socketToRoom = {}; // chua thong tin client thuoc room nao
 
 const pc_config = {
     iceServers: [
@@ -38,13 +38,15 @@ const isIncluded = (array, id) => array.some((item) => item.id === id);
 const createReceiverPeerConnection = (socketID, socket, roomID, name) => {
     const pc = new wrtc.RTCPeerConnection(pc_config);
 
-    console.log(Date.now(), '===> set receiverPCs')
+    // console.log(Date.now(), '===> set receiverPCs')
+    // kiểm tra xem ds thông tin người gửi đã tồn tại chưa
+    // nếu có rồi thì cập nhật, nếu chưa có thì tạo mới
     if (receiverPCs[socketID]) receiverPCs[socketID] = pc;
     else receiverPCs = { ...receiverPCs, [socketID]: pc };
 
     pc.onicecandidate = (e) => {
         //console.log(`socketID: ${socketID}'s receiverPeerConnection icecandidate`);
-        console.log(Date.now(), 'emit getSenderCandidate_SFU')
+        // console.log(Date.now(), 'emit getSenderCandidate_SFU')
         socket.to(socketID).emit("getSenderCandidate_SFU", {
             candidate: e.candidate,
         });
@@ -55,7 +57,7 @@ const createReceiverPeerConnection = (socketID, socket, roomID, name) => {
     };
 
     pc.ontrack = (e) => {
-        console.log(Date.now(), '=====> setUsers')
+        // console.log(Date.now(), '=====> setUsers')
         if (users[roomID]) {
             if (!isIncluded(users[roomID], socketID)) {
                 users[roomID].push({
@@ -73,7 +75,7 @@ const createReceiverPeerConnection = (socketID, socket, roomID, name) => {
                 },
             ];
         }
-        console.log(Date.now(), 'emit user enter')
+        // console.log(Date.now(), 'emit user enter')
         socket.broadcast.to(roomID).emit("userEnter_SFU", { id: socketID, name });
     };
 
@@ -88,7 +90,7 @@ const createSenderPeerConnection = (
 ) => {
     const pc = new wrtc.RTCPeerConnection(pc_config);
 
-    console.log(Date.now(), '=====> set senderPcs')
+    // console.log(Date.now(), '..=====> set senderPcs')
     if (senderPCs[senderSocketID]) {
         senderPCs[senderSocketID].filter((user) => user.id !== receiverSocketID);
         senderPCs[senderSocketID].push({ id: receiverSocketID, pc });
@@ -99,7 +101,7 @@ const createSenderPeerConnection = (
         };
 
     pc.onicecandidate = (e) => {
-        console.log(Date.now(), `emit getReceiverCandidate_SFU`);
+        // console.log(Date.now(), `emit getReceiverCandidate_SFU`);
         socket.to(receiverSocketID).emit("getReceiverCandidate_SFU", {
             id: senderSocketID,
             candidate: e.candidate,
@@ -154,14 +156,16 @@ const closeSenderPCs = (socketID) => {
 
         senderPCs[socketID].forEach((senderPC) => {
             senderPC.pc.close();
-            const eachSenderPC = senderPCs[senderPC.id].filter(
-                (sPC) => sPC.id === socketID
-            )[0];
-            if (!eachSenderPC) return;
-            eachSenderPC.pc.close();
-            senderPCs[senderPC.id] = senderPCs[senderPC.id].filter(
-                (sPC) => sPC.id !== socketID
-            );
+            if (senderPCs[senderPC.id]) {
+                const eachSenderPC = senderPCs[senderPC.id].filter(
+                    (sPC) => sPC.id === socketID
+                )[0];
+                if (!eachSenderPC) return;
+                eachSenderPC.pc.close();
+                senderPCs[senderPC.id] = senderPCs[senderPC.id].filter(
+                    (sPC) => sPC.id !== socketID
+                );
+            }
         });
 
         delete senderPCs[socketID];
@@ -176,10 +180,12 @@ io.on('connection', socket => {
     // event SFU architecture
     socket.on("joinRoom_SFU", (data) => {
         try {
-            console.log(Date.now(), '********** joinRoom_SFU')
-            let allUsers = getOtherUsersInRoom(data.id, data.roomID);
-            console.log(Date.now(), "emit all user")
-            io.to(data.id).emit("allUsers_SFU", { users: allUsers });
+            // console.log(Date.now(), '********** joinRoom_SFU')
+            if (data.id && data.roomID) {
+                let allUsers = getOtherUsersInRoom(data.id, data.roomID);
+                // console.log(Date.now(), "emit all user")
+                io.to(data.id).emit("allUsers_SFU", { users: allUsers });
+            }
         } catch (error) {
             console.log(error);
         }
@@ -187,23 +193,25 @@ io.on('connection', socket => {
 
     socket.on("senderOffer_SFU", async (data) => {
         try {
-            console.log(Date.now(), '********** senderOffer_SFU')
-            socketToRoom[data.senderSocketID] = data.roomID;
-            let pc = createReceiverPeerConnection(
-                data.senderSocketID,
-                socket,
-                data.roomID,
-                data.name
-            );
-            await pc.setRemoteDescription(data.sdp);
-            let sdp = await pc.createAnswer({
-                offerToReceiveAudio: true,
-                offerToReceiveVideo: true,
-            });
-            await pc.setLocalDescription(sdp);
-            socket.join(data.roomID);
-            console.log(Date.now(), 'emit getSenderAnswer_SFU')
-            io.to(data.senderSocketID).emit("getSenderAnswer_SFU", { sdp });
+            // console.log(Date.now(), '********** senderOffer_SFU')
+            if (data.senderSocketID && data.roomID && data.name) {
+                socketToRoom[data.senderSocketID] = data.roomID;
+                let pc = createReceiverPeerConnection(
+                    data.senderSocketID,
+                    socket,
+                    data.roomID,
+                    data.name
+                );
+                await pc.setRemoteDescription(data.sdp);
+                let sdp = await pc.createAnswer({
+                    offerToReceiveAudio: true,
+                    offerToReceiveVideo: true,
+                });
+                await pc.setLocalDescription(sdp);
+                socket.join(data.roomID);
+                // console.log(Date.now(), 'emit getSenderAnswer_SFU')
+                io.to(data.senderSocketID).emit("getSenderAnswer_SFU", { sdp });
+            }
         } catch (error) {
             console.log(error);
         }
@@ -211,9 +219,11 @@ io.on('connection', socket => {
 
     socket.on("senderCandidate_SFU", async (data) => {
         try {
-            console.log(Date.now(), "********** senderCandidate_SFU ")
-            let pc = receiverPCs[data.senderSocketID];
-            await pc.addIceCandidate(new wrtc.RTCIceCandidate(data.candidate));
+            // console.log(Date.now(), "********** senderCandidate_SFU ")
+            if (data.senderSocketID && data.candidate) {
+                let pc = receiverPCs[data.senderSocketID];
+                await pc.addIceCandidate(new wrtc.RTCIceCandidate(data.candidate));
+            }
         } catch (error) {
             // console.log(error);
         }
@@ -221,24 +231,26 @@ io.on('connection', socket => {
 
     socket.on("receiverOffer_SFU", async (data) => {
         try {
-            console.log(Date.now(), '********** receiverOffer_SFU')
-            let pc = createSenderPeerConnection(
-                data.receiverSocketID,
-                data.senderSocketID,
-                socket,
-                data.roomID
-            );
-            await pc.setRemoteDescription(data.sdp);
-            let sdp = await pc.createAnswer({
-                offerToReceiveAudio: false,
-                offerToReceiveVideo: false,
-            });
-            await pc.setLocalDescription(sdp);
-            console.log(Date.now(), 'emit getReceiverAnswer_SFU')
-            io.to(data.receiverSocketID).emit("getReceiverAnswer_SFU", {
-                id: data.senderSocketID,
-                sdp,
-            });
+            // console.log(Date.now(), '********** receiverOffer_SFU')
+            if (data.senderSocketID && data.receiverSocketID && data.roomID && data.sdp) {
+                let pc = createSenderPeerConnection(
+                    data.receiverSocketID,
+                    data.senderSocketID,
+                    socket,
+                    data.roomID
+                );
+                await pc.setRemoteDescription(data.sdp);
+                let sdp = await pc.createAnswer({
+                    offerToReceiveAudio: false,
+                    offerToReceiveVideo: false,
+                });
+                await pc.setLocalDescription(sdp);
+                // console.log(Date.now(), 'emit getReceiverAnswer_SFU')
+                io.to(data.receiverSocketID).emit("getReceiverAnswer_SFU", {
+                    id: data.senderSocketID,
+                    sdp,
+                });
+            }
         } catch (error) {
             console.log(error);
         }
@@ -246,13 +258,15 @@ io.on('connection', socket => {
 
     socket.on("receiverCandidate_SFU", async (data) => {
         try {
-            console.log(Date.now(), "********** receiverCandidate_SFU")
-            const senderPC = senderPCs[data.senderSocketID].filter(
-                (sPC) => sPC.id === data.receiverSocketID
-            )[0];
-            await senderPC.pc.addIceCandidate(
-                new wrtc.RTCIceCandidate(data.candidate)
-            );
+            // console.log(Date.now(), "********** receiverCandidate_SFU")
+            if (data.senderSocketID && data.receiverSocketID) {
+                const senderPC = senderPCs[data.senderSocketID].filter(
+                    (sPC) => sPC.id === data.receiverSocketID
+                )[0];
+                await senderPC.pc.addIceCandidate(
+                    new wrtc.RTCIceCandidate(data.candidate)
+                );
+            }
         } catch (error) {
             console.log(error);
         }
@@ -277,6 +291,16 @@ io.on('connection', socket => {
         closeSenderPCs(socket.id);
 
         socket.broadcast.to(roomID).emit('user_exit', {id: socket.id});
+    });
+
+    socket.on('endStream_SFU', (data) => {
+        if (data.senderSocketID && socket.id) {
+            closeReceiverPC(data.senderSocketID);
+            deleteUser(socket.id, data.roomID);
+            delete senderPCs[socket.id];
+            // closeSenderPCs(socket.id);
+            socket.broadcast.to(data.roomID).emit('user_exit', {id: data.senderSocketID});
+        }
     })
 
     // event 2P2 architecture
