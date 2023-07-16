@@ -100,16 +100,52 @@ function updateLastMessage(roomId, message, sender, roomRepository) {
     return roomRepository.updateLastMessageById(roomId, message, sender);
 }
 
-function updateTitle(roomId, title, roomRepository) {
-    return roomRepository.updateTitleById(roomId, title)
+function UseCaseUpdateRoomById(roomId, room, email, roomRepository) {
+    return roomRepository.getAdminRoomById(roomId)
+        .then((_room) => {
+            if (_room.admin === email) {
+                return roomRepository.updateById(roomId, room);
+            } else {
+                throw new Error('You dont have permission to update this room')
+            }
+        })
 }
 
-function addMember(roomId, members, roomRepository) {
-    return roomRepository.addMemberById(roomId, members);
+function UseCaseAddMember(roomId, members, currentEmail, roomRepository) {
+    // return roomRepository.addMemberById(roomId, members);
+    return roomRepository.getAdminRoomById(roomId)
+        .then((_room) => {
+            if (_room.admin === currentEmail) {
+                return roomRepository.addMembers(roomId, members);
+            } else {
+                throw new Error('You dont have permission to add members to this room')
+            }
+        })
 }
 
-function removeMember(roomId, members, roomRepository) {
-    return roomRepository.removeMembersById(roomId, members);
+function UseCaseRemoveMember(roomId, members, currentEmail, roomRepository) {
+    // return roomRepository.removeMembersById(roomId, members);
+    return roomRepository.getAdminRoomById(roomId)
+        .then((_room) => {
+            if (_room.admin === currentEmail) {
+                return roomRepository.deleteMembers(roomId, members);
+            } else {
+                throw new Error('You dont have permission to remove members to this room')
+            }
+        })
+}
+
+function UseCaseOutRoom(roomId, email, roomRepository) {
+    return roomRepository.getMembersRoomById(roomId)
+        .then((_room) => {
+            if (_room.admin === email) {
+                throw new Error('Admin can not out room')
+            } else if (_room.members.includes(email)) {
+                return roomRepository.deleteMembers(roomId, [email]);
+            } else {
+                throw new Error('You are not member of this room')
+            }
+        })
 }
 
 function getAdminRoomById(roomId, roomRepository) {
@@ -123,9 +159,10 @@ export {
     deleteById,
     createRoom,
     updateLastMessage,
-    updateTitle,
-    addMember,
-    removeMember,
+    UseCaseUpdateRoomById,
+    UseCaseAddMember,
+    UseCaseRemoveMember,
     getAdminRoomById,
-    createChatUserById
+    createChatUserById,
+    UseCaseOutRoom
 }

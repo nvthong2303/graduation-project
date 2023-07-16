@@ -41,9 +41,13 @@ export default function roomChatRepositoryMongoDB() {
         updatedAt: new Date()
     })
 
-    const updateTitleById = (id, title) => RoomModel.findByIdAndUpdate(id, {
-        title: title
-    })
+    const updateRoomById = (id, room) => {
+        return RoomModel.findByIdAndUpdate(id, {
+            title: room.title,
+            description: room.description,
+            avatar: room.avatar
+        })
+    }
 
     const addMemberById = (id, members) => RoomModel.findByIdAndUpdate(id, {
         $push: { members: { $each: members } }
@@ -54,6 +58,9 @@ export default function roomChatRepositoryMongoDB() {
     })
 
     const getAdminRoomById = (id) => RoomModel.findById(id).select('admin')
+    const getMembersRoomById = (id) => {
+        return RoomModel.findById(id).select('members admin')
+    }
 
     return {
         findByProperty,
@@ -61,10 +68,11 @@ export default function roomChatRepositoryMongoDB() {
         createRoom,
         deleteById,
         updateLastMessageById,
-        updateTitleById,
+        updateRoomById,
         addMemberById,
         removeMembersById,
-        getAdminRoomById
+        getAdminRoomById,
+        getMembersRoomById
     }
 }
 

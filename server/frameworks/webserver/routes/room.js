@@ -25,6 +25,12 @@ export default function roomRouter(express) {
     router.route('/user/:email').get(authMiddleware, controller.fetchRoomByEmail); // get room by email
     router.route('/').get(authMiddleware, controller.fetchRoomByMember); // get list room user join
 
+    // PUT endpoints
+    router.route('/:id').put(authMiddleware, controller.updateRoom) // update room
+    router.route('/add-members/:id').put(authMiddleware, controller.addMember) // add member
+    router.route('/delete-members/:id').put(authMiddleware, controller.deleteMember) // remove member
+    router.route('/out/:id').put(authMiddleware, controller.outRoom) // out room
+
     // Delete endpoints
     router.route('/:id').delete(authMiddleware, controller.deleteRoom); // delete room
 

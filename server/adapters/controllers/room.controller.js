@@ -4,11 +4,12 @@ import {
     findById,
     updateLastMessage,
     getAdminRoomById,
-    addMember,
-    removeMember,
+    UseCaseAddMember,
+    UseCaseRemoveMember,
     deleteById,
-    updateTitle,
-    createChatUserById
+    UseCaseUpdateRoomById,
+    createChatUserById,
+    UseCaseOutRoom
 } from "../../applications/use_case/roomChat_usecase";
 
 
@@ -140,6 +141,51 @@ export default function roomController(
             .catch((error) => next(error))
     }
 
+    const updateRoom = (req, res, next) => {
+        const updateRoom = {
+            title: req.body.title,
+            description: req.body.description,
+            avatar: req.body.avatar
+        }
+        UseCaseUpdateRoomById(req.params.id, updateRoom, req.user.email, dbRepository)
+            .then(() => {
+                return res.json({
+                    message: 'Update success'
+                })
+            })
+            .catch((err) => next(err))
+    }
+
+    const addMember = (req, res, next) => {
+        UseCaseAddMember(req.params.id, req.body.members, req.user.email, dbRepository)
+            .then(() => {
+                return res.json({
+                    message: 'Add members success'
+                })
+            })
+            .catch((err) => next(err))
+    }
+
+    const deleteMember = (req, res, next) => {
+        UseCaseRemoveMember(req.params.id, req.body.members, req.user.email, dbRepository)
+            .then(() => {
+                return res.json({
+                    message: 'Remove members success'
+                })
+            })
+            .catch((err) => next(err))
+    }
+
+    const outRoom = (req, res, next) => {
+        UseCaseOutRoom(req.params.id, req.user.email, dbRepository)
+            .then(() => {
+                return res.json({
+                    message: 'Out room success'
+                })
+            })
+            .catch((err) => next(err))
+    }
+
     return {
         fetchRoomByProperty,
         createRoom,
@@ -147,6 +193,10 @@ export default function roomController(
         fetchRoomByMember,
         deleteRoom,
         createChatUserToUser,
-        fetchRoomByEmail
+        fetchRoomByEmail,
+        updateRoom,
+        addMember,
+        deleteMember,
+        outRoom
     }
 }
