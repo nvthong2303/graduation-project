@@ -34,6 +34,8 @@ export type WebRTCUser = {
 export default function VideoCall(props: any) {
     const socketRef = useRef<SocketIOClient.Socket>();
     const [streaming, setStreaming] = React.useState(true);
+    const infoUser = useSelector((state: any) => state.userReducer.userInfo);
+    const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom);
 
     const startStreaming = async () => {
         setStreaming(true);
@@ -45,10 +47,9 @@ export default function VideoCall(props: any) {
 
     return (
         <>
-            {streaming ? (
+            {currentRoom.admin && infoUser.email && streaming ? (
                 <>
-                    <Button onClick={endStreaming}>Out call</Button>
-                    <VideoCall_SFU />
+                    <VideoCall_SFU room={currentRoom} user={infoUser}/>
                 </>
                 ) : (
                     <>
