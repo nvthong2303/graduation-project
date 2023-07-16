@@ -9,7 +9,6 @@ function omit(obj, ...props) {
 
 export default function userRepositoryMongoDB() {
     const findUserByProperty = (params) => {
-        console.log(params)
         const { email, username } = omit(params, 'page', 'perPage')
         if (email) {
             return UserModel
@@ -37,10 +36,20 @@ export default function userRepositoryMongoDB() {
         return newUser.save();
     };
 
+    const getListUserByProperties = async (emails) => {
+        const users = await UserModel.find({
+            email: {
+                $in: emails
+            }
+        }).select({ password: 0, createdAt: 0 })
+        return users
+    }
+
     return {
         findUserByProperty,
         countAll,
         findById,
-        add
+        add,
+        getListUserByProperties
     };
 }

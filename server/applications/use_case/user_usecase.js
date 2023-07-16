@@ -77,6 +77,10 @@ function login(email, password, userRepository, authService) {
             const token = authService.generateToken(payload)
           return { token, user: user[0] }
         })
+};
+
+const getListUserByEmails = (emails, userRepository) => {
+    return userRepository.getListUserByEmails(emails)
 }
 
 export {
@@ -84,5 +88,6 @@ export {
     countAll,
     findById,
     findUserByProperty,
-    login
+    login,
+    getListUserByEmails
 }

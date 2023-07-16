@@ -17,6 +17,7 @@ export default function userRouter(express) {
     );
 
     // GET endpoints
+    router.route('/list').get(authMiddleware, controller.fetchListUserByEmails);
     router.route('/:id').get(authMiddleware, controller.fetchUserById);
     router.route('/').get(authMiddleware, controller.fetchUsersByProperty);
 

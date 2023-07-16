@@ -9,11 +9,14 @@ export default function userRepository(repository) {
 
     const deleteById = (id) => repository.deleteById(id);
 
+    const getListUserByEmails = (emails) => repository.getListUserByProperties(emails)
+
     return {
         findUserByProperty,
         countAll,
         findById,
         add,
-        deleteById
+        deleteById,
+        getListUserByEmails
     }
 }

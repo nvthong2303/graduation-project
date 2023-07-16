@@ -1,4 +1,4 @@
-import {addUser, findById, countAll, findUserByProperty, login} from "../../applications/use_case/user_usecase";
+import {addUser, findById, countAll, findUserByProperty, login, getListUserByEmails} from "../../applications/use_case/user_usecase";
 
 export default function userController(
     userDbRepository,
@@ -58,11 +58,24 @@ export default function userController(
             .catch((err) => next(err))
     };
 
+    const fetchListUserByEmails = (req, res, next) => {
+        const emails = req.query.emails.split(',').filter(el => el !== req.user.email)
+        getListUserByEmails(emails, dbRepository)
+            .then((users) => {
+                    return res.json({
+                        users
+                    })
+                }
+            )
+            .catch((err) => next(err))
+    }
+
     return {
         fetchUsersByProperty,
         fetchUserById,
         register,
-        loginUser
+        loginUser,
+        fetchListUserByEmails
     }
 }
 
