@@ -1,16 +1,12 @@
 import React from 'react';
 import {makeStyles} from '@mui/styles';
 import {
-    Autocomplete, Avatar,
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
     TextField,
     ImageList,
     ImageListItem,
@@ -19,13 +15,11 @@ import {
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useDispatch, useSelector} from "react-redux";
-import _ from 'lodash';
-import { SearchUserByUsername } from "../../apis/user.api";
-import {CreateRoom, GetListRoomApi} from "../../apis/room.api";
-import {User} from "../Header";
-import { getSrcAvatarRoom, listImageAvatar } from "../../common";
+import {GetDetailRoomById, GetListRoomApi, UpdateRoom} from "../../apis/room.api";
+import { listImageAvatar } from "../../common";
 import { useSnackbar } from "notistack";
 import {getDetailRoomSuccess, getListRoomSuccess} from "../../store/action/room.action";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -67,15 +61,17 @@ const useStyles = makeStyles({
 interface Props {
     open: boolean
     onClose: any
+    onCloseEL: any
 }
 
 export default function DialogSettingRoom(props: Props) {
-    const {open, onClose} = props
+    const {open, onClose, onCloseEL} = props
     const classes = useStyles();
     const user = useSelector((state: any) => state.userReducer.userInfo);
     const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom)
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const formik = useFormik({
         initialValues: {
@@ -102,11 +98,11 @@ export default function DialogSettingRoom(props: Props) {
     const handleUpdateRoom = async (values: any) => {
         const token = localStorage.getItem('_token_')
         if (token) {
-            const res = await CreateRoom({
+            const res = await UpdateRoom({
+                id: currentRoom._id,
                 title: values.title,
                 description: values.description,
                 avatar: values.avatar,
-                members: values.members.map((el : any) => el.email)
             }, token)
 
             if (res.status === 200) {
@@ -114,11 +110,21 @@ export default function DialogSettingRoom(props: Props) {
                     variant: 'success'
                 });
                 onClose();
+                const res = await GetDetailRoomById(currentRoom._id, token)
+                if (res.status === 200) {
+                    if (res.data) {
+                        dispatch(getDetailRoomSuccess(res.data))
+                    }
+                }
+                handleGetListRoom(token);
+                onCloseEL();
             } else {
                 enqueueSnackbar('Update room failed', {
                     variant: 'error'
                 });
             }
+        } else {
+            history.push('/')
         }
     }
 
@@ -126,6 +132,8 @@ export default function DialogSettingRoom(props: Props) {
         const res = await GetListRoomApi({}, token)
         if (res.status === 200) {
             dispatch(getListRoomSuccess(res.data))
+        } else {
+            history.push('/')
         }
     }
 
@@ -190,7 +198,7 @@ export default function DialogSettingRoom(props: Props) {
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button type='submit'>Create</Button>
+                        <Button type='submit'>Update</Button>
                         <Button onClick={onClose}>Cancel</Button>
                     </DialogActions>
                 </form>

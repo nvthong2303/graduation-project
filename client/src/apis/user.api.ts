@@ -57,3 +57,17 @@ export const SearchUserByUsername = async (keyword: string, token: string) => {
     return response;
 }
 
+export const GetListUserByEmails = async (emails: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/users/list?emails=${emails}`,
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    let response = await axios(configs);
+    return response;
+}
+

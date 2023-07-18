@@ -4,6 +4,9 @@ import {IconButton, Typography, Popover, Box, Menu, MenuItem} from "@mui/materia
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {useSelector} from "react-redux";
 import DialogSettingRoom from "../Dialog/DialogUpdateRoom";
+import DialogDeleteRoom from "../Dialog/DialogDeleteRoom";
+import DialogMembers from "../Dialog/DialogMembers";
+import DialogOutRoom from "../Dialog/DialogOutRoom";
 
 const useStyles = makeStyles({
     root: {}
@@ -17,6 +20,9 @@ export default function HeaderChat(props: any) {
     const [open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openUpdateRoom, setOpenUpdateRoom] = React.useState(false);
+    const [openDeleteRoom, setOpenDeleteRoom] = React.useState(false);
+    const [openListMembers, setOpenListMembers] = React.useState(false);
+    const [openOutRoom, setOpenOutRoom] = React.useState(false);
 
     const handleOpenPopup = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -39,6 +45,18 @@ export default function HeaderChat(props: any) {
 
     const handleUpdateRoom = () => {
         setOpenUpdateRoom(true);
+    }
+
+    const handleDeleteRoom = () => {
+        setOpenDeleteRoom(true);
+    }
+
+    const handleListMembers = () => {
+        setOpenListMembers(true);
+    }
+
+    const handleOutRoom = () => {
+        setOpenOutRoom(true);
     }
 
     return (
@@ -64,18 +82,56 @@ export default function HeaderChat(props: any) {
                 {currentRoom.admin === infoUser.email ? (
                     <>
                         <MenuItem onClick={handleUpdateRoom}>Setting room</MenuItem>
-                        <MenuItem onClick={handleClose}>List members</MenuItem>
-                        <MenuItem onClick={handleClose}>Delete room</MenuItem>
+                        <MenuItem onClick={handleListMembers}>List members</MenuItem>
+                        <MenuItem onClick={handleDeleteRoom}>Delete room</MenuItem>
                     </>
                 ) : (
                     <>
-                        <MenuItem onClick={handleClose}>List members</MenuItem>
-                        <MenuItem onClick={handleClose}>Out room</MenuItem>
+                        <MenuItem onClick={handleListMembers}>List members</MenuItem>
+                        <MenuItem onClick={handleOutRoom}>Out room</MenuItem>
                     </>
                 )}
             </Menu>
             {openUpdateRoom ? (
-                <DialogSettingRoom open={openUpdateRoom} onClose={() => setOpenUpdateRoom(false)}/>
+                <DialogSettingRoom
+                    open={openUpdateRoom}
+                    onCloseEL={handleClose}
+                    onClose={() => {
+                        setOpenUpdateRoom(false)
+                        handleClose()
+                    }}
+                />
+            ) : null}
+            {openDeleteRoom ? (
+                <DialogDeleteRoom
+                    open={openDeleteRoom}
+                    onCloseEL={handleClose}
+                    onClose={() => {
+                        setOpenDeleteRoom(false)
+                        handleClose()
+                    }}
+                    room={currentRoom}
+                />
+            ) : null}
+            {openListMembers ? (
+                <DialogMembers
+                    open={openListMembers}
+                    onClose={() => {
+                        setOpenListMembers(false)
+                        handleClose()
+                    }}
+                    onCloseEL={handleClose}
+                />
+            ) : null}
+            {openOutRoom ?  (
+                <DialogOutRoom
+                    open={openOutRoom}
+                    onClose={() => {
+                        setOpenOutRoom(false)
+                        handleClose()
+                    }}
+                    onCloseEL={handleClose}
+                />
             ) : null}
         </>
     )

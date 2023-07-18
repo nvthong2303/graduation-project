@@ -26,6 +26,7 @@ import {User} from "../Header";
 import { getSrcAvatarRoom, listImageAvatar } from "../../common";
 import { useSnackbar } from "notistack";
 import {getDetailRoomSuccess, getListRoomSuccess} from "../../store/action/room.action";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles({
     root: {
@@ -76,6 +77,7 @@ export default function DialogCreateRoom(props: Props) {
     const [listUserSearch, setListUserSearch] = React.useState<User[]>([]);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const formik = useFormik({
         initialValues: {
@@ -120,9 +122,10 @@ export default function DialogCreateRoom(props: Props) {
                             type: 'user'
                         })
                     })
-                    console.log('list', listUser)
                     setListUserSearch(listUser)
                 }
+            } else {
+                history.push('/login')
             }
         } catch (err) {
             console.log(err)
@@ -159,6 +162,8 @@ export default function DialogCreateRoom(props: Props) {
                     variant: 'error'
                 });
             }
+        } else {
+            history.push('/login')
         }
     }
 
