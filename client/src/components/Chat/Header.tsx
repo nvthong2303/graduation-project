@@ -25,8 +25,10 @@ export default function HeaderChat(props: any) {
     const [openOutRoom, setOpenOutRoom] = React.useState(false);
 
     const handleOpenPopup = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-        setOpen((previousOpen) => !previousOpen);
+        if (currentRoom.type !== 'chat') {
+            setAnchorEl(event.currentTarget);
+            setOpen((previousOpen) => !previousOpen);
+        }
     };
 
     const handlerGetTitleChatName = () => {
