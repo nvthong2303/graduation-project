@@ -17,6 +17,8 @@ export default function postRepository(repository) {
 
     const commentPost = (id, comment) => repository.commentPost(id, comment)
 
+    const aggregateCategoryRepo = () => repository.aggregateCategory()
+
     return {
         findPostByProperty,
         createPost,
@@ -26,6 +28,7 @@ export default function postRepository(repository) {
         unLikePost,
         updatePost,
         countPost,
-        commentPost
+        commentPost,
+        aggregateCategoryRepo
     }
 }

@@ -121,6 +121,24 @@ export default function postRepositoryMongoDB() {
         return PostModel.countDocuments(filter)
     }
 
+    const aggregateCategory = () => {
+        return PostModel.aggregate([
+            {
+                $group: {
+                    _id: "$categories",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    category: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ])
+    }
+
     return {
         findPostByProperty,
         createPost,
@@ -130,6 +148,7 @@ export default function postRepositoryMongoDB() {
         unLikePost,
         updatePost,
         countPostByProperties,
-        commentPost
+        commentPost,
+        aggregateCategory
     };
 }

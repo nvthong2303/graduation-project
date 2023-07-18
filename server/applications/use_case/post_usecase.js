@@ -64,6 +64,10 @@ const commentPost = (id, comment, postRepository) => {
     return postRepository.commentPost(id, comment)
 }
 
+const UseCaseGetCategory = (postRepository) => {
+    return postRepository.aggregateCategoryRepo();
+}
+
 export {
     fetchPostByProperties,
     createPost,
@@ -73,5 +77,6 @@ export {
     unLikePost,
     updatePost,
     countPost,
-    commentPost
+    commentPost,
+    UseCaseGetCategory
 }

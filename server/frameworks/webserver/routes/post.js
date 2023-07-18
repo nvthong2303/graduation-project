@@ -13,6 +13,7 @@ export default function postRouter(express) {
 
     // GET post by properties
     router.route('/').get(authMiddleware, controller._fetchPostByProperties);
+    router.route('/category').get(authMiddleware, controller.ControllerGetCategory);
 
     // POST create post
     router.route('/').post(authMiddleware, controller._createPost);

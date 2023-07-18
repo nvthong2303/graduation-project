@@ -7,7 +7,8 @@ import {
     unLikePost,
     updatePost,
     countPost,
-    commentPost
+    commentPost,
+    UseCaseGetCategory
 } from "../../applications/use_case/post_usecase";
 import helmet from "helmet";
 
@@ -30,7 +31,6 @@ export default function postController(
         params.skip = params.skip ? parseInt(params.skip, 10) : 0;
         params.limit = params.limit ? parseInt(params.limit, 10) : 20;
         params.user = req.user.email;
-        console.log('===>', params)
 
         fetchPostByProperties(params, dbRepository)
             .then((posts) => {
@@ -138,12 +138,23 @@ export default function postController(
             .catch((e) => next(e))
     }
 
+    const ControllerGetCategory = (req, res, next) => {
+        UseCaseGetCategory(dbRepository)
+            .then((data) => {
+                return res.json({
+                    data
+                })
+            })
+            .catch((e) => next(e))
+    }
+
     return {
         _fetchPostByProperties,
         _createPost,
         _deletePost,
         _likePost,
         _updatePost,
-        _commentPost
+        _commentPost,
+        ControllerGetCategory
     }
 }
