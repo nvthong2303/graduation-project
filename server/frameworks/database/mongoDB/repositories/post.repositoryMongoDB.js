@@ -14,17 +14,18 @@ export default function postRepositoryMongoDB() {
         const filter = {}
         if (keyword) {
             filter['content'] = new RegExp(keyword, 'i');
+            filter['title'] = new RegExp(keyword, 'i');
         }
         if (author) {
             filter['author'] = author;
         }
         if (categories) {
-            filter['categories'] = categories;
+            filter['categories'] = { $in: categories.split(',')};
         }
         const posts = await PostModel.find(filter)
             .sort({ createdAt: -1 })
             .skip(parseInt(params.skip, 10))
-            .limit(parseInt(params.limit, 10))
+            .limit(parseInt(params.limit, 10));
         const listAuthor = posts.map(el => {
             return el.author
         })
@@ -60,12 +61,12 @@ export default function postRepositoryMongoDB() {
                 liked: el.like.includes(params.user)
             }
         })
-        console.log(standardizedPosts)
         return standardizedPosts
     };
 
     const createPost = (PostEntities) => {
         const newPost = new PostModel({
+            title: PostEntities.getTitle(),
             content: PostEntities.getContent(),
             author: PostEntities.getAuthor(),
             categories: PostEntities.getCategories(),

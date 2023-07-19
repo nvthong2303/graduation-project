@@ -1,13 +1,13 @@
 import {
-    fetchPostByProperties,
-    createPost,
-    deletePostById,
-    findPostById,
-    likePost,
-    unLikePost,
-    updatePost,
-    countPost,
-    commentPost,
+    UseCaseFetchPostByProperties,
+    UseCaseCreatePost,
+    UseCaseDeletePostById,
+    UseCaseFindPostById,
+    UseCaseLikePost,
+    UseCaseUnLikePost,
+    UseCaseUpdatePost,
+    UseCaseCountPost,
+    UseCaseCommentPost,
     UseCaseGetCategory
 } from "../../applications/use_case/post_usecase";
 import helmet from "helmet";
@@ -18,7 +18,7 @@ export default function postController(
 ) {
     const dbRepository = postDbRepository(postDbRepositoryImp());
 
-    const _fetchPostByProperties = (req, res, next) => {
+    const ControllerFetchPostByProperties = (req, res, next) => {
         const params = {};
         const response = {};
 
@@ -32,10 +32,10 @@ export default function postController(
         params.limit = params.limit ? parseInt(params.limit, 10) : 20;
         params.user = req.user.email;
 
-        fetchPostByProperties(params, dbRepository)
+        UseCaseFetchPostByProperties(params, dbRepository)
             .then((posts) => {
                 response.data = posts
-                return countPost(params, dbRepository)
+                return UseCaseCountPost(params, dbRepository)
             })
             .then((total) => {
                 response.total = total;
@@ -46,24 +46,24 @@ export default function postController(
             .catch((error) => next(error));
     }
 
-    const _createPost = (req, res, next) => {
-        const { content, categories  } = req.body;
+    const ControllerCreatePost = (req, res, next) => {
+        const { title, content, categories  } = req.body;
         const author = req.user.email;
         const attachments = []
 
-        createPost(content, author, categories, attachments, dbRepository)
-            .then((message) => {
-                return res.json(message)
+        UseCaseCreatePost(title, content, author, categories, attachments, dbRepository)
+            .then((post) => {
+                return res.json(post)
             })
             .catch((error) => next(error));
     }
 
-    const _deletePost = (req, res, next) => {
+    const ControllerDeletePost = (req, res, next) => {
         const id = req.params.id
-        findPostById(id, dbRepository)
+        UseCaseFindPostById(id, dbRepository)
             .then((post) => {
                 if (post.author === req.user.email) {
-                    return deletePostById(id, dbRepository)
+                    return UseCaseDeletePostById(id, dbRepository)
                 } else {
                     throw new Error('You not author')
                 }
@@ -75,12 +75,12 @@ export default function postController(
             })
             .catch((e) => next(e))
     }
-    const _likePost = (req, res, next) => {
+    const ControllerLikePost = (req, res, next) => {
         const id = req.params.id
-        findPostById(id, dbRepository)
+        UseCaseFindPostById(id, dbRepository)
             .then((post) => {
                 if (post.like.includes(req.user.email)) {
-                    unLikePost(id, req.user.email, dbRepository)
+                    UseCaseUnLikePost(id, req.user.email, dbRepository)
                         .then(() => {
                             return res.json({
                                 message: 'unLiked'
@@ -88,7 +88,7 @@ export default function postController(
                         })
                         .catch((e) => next(e))
                 } else {
-                    likePost(id, req.user.email, dbRepository)
+                    UseCaseLikePost(id, req.user.email, dbRepository)
                         .then(() => {
                             return res.json({
                                 message: 'liked'
@@ -99,16 +99,16 @@ export default function postController(
             })
             .catch((e) => next(e))
     }
-    const _updatePost = (req, res, next) => {
+    const ControllerUpdatePost = (req, res, next) => {
         const id = req.params.id
-        findPostById(id, dbRepository)
+        UseCaseFindPostById(id, dbRepository)
             .then(post => {
                 if (post.author === req.user.email) {
                     const update = {
                         content: req.body.content,
                         categories: req.body.categories
                     }
-                    updatePost(id, update,dbRepository)
+                    UseCaseUpdatePost(id, update,dbRepository)
                         .then(() => {
                             return res.json({
                                 message: 'update success'
@@ -122,14 +122,14 @@ export default function postController(
             .catch((e) => next(e))
     }
 
-    const _commentPost = (req, res, next) => {
+    const ControllerCommentPost = (req, res, next) => {
         const id = req.params.id;
         const comment = {
             content: req.body.content,
             author: req.user.email,
             createdAt: Date.now()
         }
-        commentPost(id, comment, dbRepository)
+        UseCaseCommentPost(id, comment, dbRepository)
             .then(() => {
                 return res.json({
                     message: 'comment success'
@@ -149,12 +149,12 @@ export default function postController(
     }
 
     return {
-        _fetchPostByProperties,
-        _createPost,
-        _deletePost,
-        _likePost,
-        _updatePost,
-        _commentPost,
+        ControllerFetchPostByProperties,
+        ControllerCreatePost,
+        ControllerDeletePost,
+        ControllerLikePost,
+        ControllerUpdatePost,
+        ControllerCommentPost,
         ControllerGetCategory
     }
 }

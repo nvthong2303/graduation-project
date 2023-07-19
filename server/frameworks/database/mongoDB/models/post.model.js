@@ -12,6 +12,10 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
+    title: {
+        type: String,
+        required: true
+    },
     like: {
         type: Array,
         default: []

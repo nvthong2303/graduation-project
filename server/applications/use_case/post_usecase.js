@@ -1,6 +1,6 @@
 import post from '../../src/entities/post'
 
-function fetchPostByProperties(
+function UseCaseFetchPostByProperties(
     param,
     postRepository
 ) {
@@ -15,7 +15,8 @@ function fetchPostByProperties(
     return postRepository.findPostByProperty(params)
 }
 
-function createPost(
+function UseCaseCreatePost(
+    title,
     content,
     author,
     categories,
@@ -23,6 +24,7 @@ function createPost(
     postRepository
 ) {
     const newPost = new post(
+        title,
         content,
         author,
         categories,
@@ -31,27 +33,27 @@ function createPost(
     return postRepository.createPost(newPost)
 }
 
-const deletePostById = (id, postRepository) => {
+const UseCaseDeletePostById = (id, postRepository) => {
     return postRepository.deletePostById(id)
 }
 
-const findPostById = (id, postRepository) => {
+const UseCaseFindPostById = (id, postRepository) => {
     return postRepository.findPostById(id)
 }
 
-const likePost = (id, user, postRepository) => {
+const UseCaseLikePost = (id, user, postRepository) => {
     return postRepository.likePost(id, user)
 }
 
-const unLikePost = (id, user, postRepository) => {
+const UseCaseUnLikePost = (id, user, postRepository) => {
     return postRepository.unLikePost(id, user)
 }
 
-const updatePost = (id, newPost, postRepository) => {
+const UseCaseUpdatePost = (id, newPost, postRepository) => {
     return postRepository.updatePost(id, newPost)
 }
 
-const countPost = (properties, postRepository) => {
+const UseCaseCountPost = (properties, postRepository) => {
     const _properties = {
         keyword: properties.keyword,
         author: properties.author,
@@ -60,7 +62,7 @@ const countPost = (properties, postRepository) => {
     return postRepository.countPost(_properties)
 }
 
-const commentPost = (id, comment, postRepository) => {
+const UseCaseCommentPost = (id, comment, postRepository) => {
     return postRepository.commentPost(id, comment)
 }
 
@@ -69,14 +71,14 @@ const UseCaseGetCategory = (postRepository) => {
 }
 
 export {
-    fetchPostByProperties,
-    createPost,
-    deletePostById,
-    findPostById,
-    likePost,
-    unLikePost,
-    updatePost,
-    countPost,
-    commentPost,
+    UseCaseFetchPostByProperties,
+    UseCaseCreatePost,
+    UseCaseDeletePostById,
+    UseCaseFindPostById,
+    UseCaseLikePost,
+    UseCaseUnLikePost,
+    UseCaseUpdatePost,
+    UseCaseCountPost,
+    UseCaseCommentPost,
     UseCaseGetCategory
 }
