@@ -33,3 +33,45 @@ export const GetListPostByOption = async (options: any, token: string) => {
     let response = await axios(configs);
     return response;
 }
+
+export const LikePostAPI = async (id: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/post/like/${id}`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    };
+    let response = await axios(configs);
+    return response;
+}
+
+export const CommentPostAPI = async (comment: string, id: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/post/comment/${id}`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        data: {
+            content: comment
+        }
+    };
+    let response = await axios(configs);
+    return response;
+}
+
+export const DeletePostAPI = async (id: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/post/${id}`,
+        method: 'delete',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    };
+    let response = await axios(configs);
+    return response;
+}

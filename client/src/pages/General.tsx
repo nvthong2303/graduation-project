@@ -9,9 +9,7 @@ import {
     Box,
     Button,
     Grid,
-    TextField,
-    Divider,
-    Chip
+    Pagination
 } from "@mui/material";
 import LeftPostPage from "../components/LeftPostPage";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -23,7 +21,6 @@ const useStyles = makeStyles({
         background: 'linear-gradient(45deg, #ffe7ec 30%, #e7b59b 90%)',
         width: '100%',
         height: '100vh',
-        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -48,7 +45,8 @@ const useStyles = makeStyles({
     listCategory: {
     },
     posts: {
-        padding: '40px 20px 0 20px'
+        padding: '40px 20px 50px 20px',
+        height: '100%'
     },
     author: {
 
@@ -72,6 +70,8 @@ export default function General(props: any) {
     const history = useHistory();
     const user = useSelector((state: any) => state.userReducer.userInfo);
     const [categoriesSelected, setCategoriesSelected] = React.useState<any[]>([])
+    const [keyword, setKeyword] = React.useState('');
+    const [postUpdate, setPostUpdate] = React.useState<any>();
 
     React.useEffect(() => {
         const userId = localStorage.getItem('_user_id_')
@@ -94,49 +94,9 @@ export default function General(props: any) {
         }
     }
 
-    const handleDeleteCategory = (el: any) => {
-        setCategoriesSelected(categoriesSelected.filter(_el => _el.category != el.category))
-    }
-
     return (
         <div className={classes.root}>
             <Header />
-            <Box className={classes.search} sx={{ height: categoriesSelected.length > 0 ? '120px' : '80px' }}>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                }}>
-                    <TextField
-                        className={classes.inputSearch}
-                        placeholder="Search post by content"
-                        size="small"
-                    />
-                    <Button
-                        sx={{
-                            marginLeft: '20px',
-                            fontSize: '12px',
-                            height: '40px'
-                        }}
-                        variant="contained" endIcon={<BorderColorIcon />}>
-                        Create Post
-                    </Button>
-                </div>
-                {categoriesSelected.length > 0 ?
-                    <div style={{
-                        width: '100%',
-                        height: '40px',
-                        overflowX: 'auto',
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        marginTop: '12px'
-                    }} >
-                        {categoriesSelected.map(el => (
-                            <Chip sx={{marginRight: '8px', backgroundColor: 'yellow' }} label={el.category} onDelete={() => handleDeleteCategory(el)} />
-                        ))}
-                    </div>
-                    : null}
-            </Box>
-            <Divider />
             <Grid
                 className={classes.workSpace}
                 container
@@ -147,19 +107,28 @@ export default function General(props: any) {
                     item
                     xs={3}
                 >
-                    <ListCategory item={categoriesSelected} setItem={setCategoriesSelected}/>
+                    <ListCategory
+                        item={categoriesSelected}
+                        setItem={setCategoriesSelected}
+                        keyword={keyword}
+                        setKeyword={setKeyword}
+                    />
                 </Grid>
                 <Grid
                     className={classes.posts}
                     item
-                    xs={7}
+                    xs={6}
                 >
-                    <Posts />
+                    <Posts
+                        keyword={keyword}
+                        categories={categoriesSelected.map(el=> el.category).toString()}
+                        setPostUpdate={setPostUpdate}
+                    />
                 </Grid>
                 <Grid
                     className={classes.author}
                     item
-                    xs={2}
+                    xs={3}
                 >
                     <LeftPostPage />
                 </Grid>
