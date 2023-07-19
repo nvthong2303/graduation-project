@@ -48,6 +48,7 @@ export default function postRepositoryMongoDB() {
                 return cmt
             })
             return {
+                title: el.title,
                 author: el.author,
                 authorName,
                 countLike: el.like.length,
