@@ -60,7 +60,7 @@ export default function DialogMembers(props: Props) {
     const {open, onClose, onCloseEL} = props
     const classes = useStyles();
     const user = useSelector((state: any) => state.userReducer.userInfo);
-    const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom)
+    const currentRoom = useSelector((state: any) => state.roomReducer.currentRoom);
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
     const history = useHistory();
