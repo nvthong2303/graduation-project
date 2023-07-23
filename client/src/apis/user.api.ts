@@ -71,3 +71,18 @@ export const GetListUserByEmails = async (emails: string, token: string) => {
     return response;
 }
 
+export const ForgetPasswordApi = async (email: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/users/forget-password`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            email
+        }
+    };
+
+    let response = await axios(configs);
+    return response;
+}

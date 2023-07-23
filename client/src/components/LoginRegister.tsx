@@ -10,8 +10,9 @@ import teamsIcon from '../assets/images/streaming.png';
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {LoginApi, RegisterApi} from "../apis/user.api";
+import {ForgetPasswordApi, LoginApi, RegisterApi} from "../apis/user.api";
 import { getInfoUserSuccess } from "../store/action/user.action";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles({
     root: {
@@ -51,6 +52,7 @@ function LoginRegister() {
     const [showPassword, setShowPassword] = React.useState(false);
     const [rememberMe, setRememberMe] = React.useState(false);
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -61,8 +63,8 @@ function LoginRegister() {
 
     const formikLogin = useFormik({
         initialValues: {
-            email: "nvthong2704@gmail.com",
-            password: "123456",
+            email: "",
+            password: "",
         },
         validationSchema: Yup.object({
             email: Yup.string()
@@ -87,7 +89,7 @@ function LoginRegister() {
                 .required("Required!"),
         }),
         onSubmit: values => {
-            handleForgetPassword(values)
+            handleForgetPassword()
         }
     });
 
@@ -99,8 +101,8 @@ function LoginRegister() {
             confirm_password: ""
         },
         validationSchema: Yup.object({
-            full_name: Yup.string()
-                .min(2, "Mininum 2 characters")
+            fullName: Yup.string()
+                .min(2, "Minimum 2 characters")
                 .max(15, "Maximum 15 characters")
                 .required("Required!"),
             email: Yup.string()
@@ -114,34 +116,79 @@ function LoginRegister() {
                 .required("Required!")
         }),
         onSubmit: values => {
-            handleRegister(values)
+            console.log(formikRegister)
+            // handleRegister()
         }
     });
 
     const handleLogin = async (data: any) => {
-        const res = await LoginApi(data)
+        try {
+            const res = await LoginApi(data)
 
-        if (res.status === 200) {
-            localStorage.setItem('_token_', res.data.token);
-            localStorage.setItem('_user_id_', res.data.user._id);
-            dispatch(getInfoUserSuccess(res.data))
-        } else {
+            if (res.status === 200) {
+                localStorage.setItem('_token_', res.data.token);
+                localStorage.setItem('_user_id_', res.data.user._id);
+                dispatch(getInfoUserSuccess(res.data))
+            } else {
 
+            }
+        } catch (e: any) {
+            enqueueSnackbar(e.response.data.message, {
+                variant: 'error'
+            });
+        }
+
+    }
+
+    const handleRegister = async () => {
+        try {
+            const body = {
+                username: formikRegister.values.fullName,
+                password: formikRegister.values.password,
+                email: formikRegister.values.email,
+            }
+            const res = await RegisterApi(body)
+
+            if (res.status === 200) {
+                enqueueSnackbar('Register success', {
+                    variant: 'success'
+                });
+                formikLogin.setFieldValue('email', formikRegister.values.email)
+                formikLogin.setFieldValue('password', formikRegister.values.password)
+                setType('login')
+            } else {
+                console.log(res)
+                enqueueSnackbar(res.data.message, {
+                    variant: 'error'
+                });
+            }
+        } catch (e: any) {
+            enqueueSnackbar(e.response.data.message, {
+                variant: 'error'
+            });
         }
     }
 
-    const handleRegister = async (data: any) => {
-        const res = await RegisterApi(data)
+    const handleForgetPassword = async () => {
+        try {
+            const res = await ForgetPasswordApi(formikForgotPassword.values.email)
 
-        if (res.status === 200) {
-
-        } else {
-
+            if (res.status === 200) {
+                enqueueSnackbar(res.data.message, {
+                    variant: 'success'
+                });
+                setType('login')
+            } else {
+                console.log(res)
+                enqueueSnackbar(res.data.message, {
+                    variant: 'error'
+                });
+            }
+        } catch (e: any) {
+            enqueueSnackbar(e.response.data.message, {
+                variant: 'error'
+            });
         }
-    }
-
-    const handleForgetPassword = async (data: any) => {
-        console.log(data)
     }
 
     return (
@@ -261,7 +308,7 @@ function LoginRegister() {
                     </form>
                 </div>
             ) : type === 'register' ? (
-                <div>
+                <div className={classes.form}>
                     <form onSubmit={formikRegister.handleSubmit}>
                         <Typography variant='h5'>Sign Up</Typography>
                         <TextField
@@ -385,6 +432,8 @@ function LoginRegister() {
                                 color: '#000000'
                             }}
                             type='submit'
+                            onClick={handleRegister}
+                            disabled={!formikRegister.isValid}
                             variant="outlined">Register</Button>
 
                         <Divider sx={{
@@ -438,7 +487,9 @@ function LoginRegister() {
                                 backgroundColor: '#1976d2',
                                 color: '#000000'
                             }}
+                            onClick={handleForgetPassword}
                             type='submit'
+                            disabled={!formikForgotPassword.isValid}
                             variant="outlined">Send</Button>
 
                         <Divider sx={{

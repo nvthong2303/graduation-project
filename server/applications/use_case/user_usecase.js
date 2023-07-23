@@ -26,10 +26,10 @@ function UseCaseAddUser(
             if (userWithUserName.length) {
                 throw new Error(`User with username: ${username} already exist`);
             }
-            return userRepository.findUserByPropertyRepo({ email });
+            return userRepository.findUserByEmailRepo(email);
     })
         .then((userWithEmail) => {
-            if (userWithEmail.length) {
+            if (userWithEmail) {
                 throw new Error(`User with email: ${email} already exist`);
             }
             return userRepository.addRepo(newUser)
