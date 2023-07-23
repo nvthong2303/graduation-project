@@ -20,6 +20,8 @@ export default function userRepositoryMongoDB() {
         }
     };
 
+    const findUserByEmail = (email) => UserModel.findOne({ email })
+
     const countAll = (params) => UserModel.countDocuments(omit(params, 'page', 'perPage'));
 
     const findById = (id) => UserModel.findById(id).select('-password');
@@ -45,11 +47,21 @@ export default function userRepositoryMongoDB() {
         return users
     }
 
+    const updatePassword = async (email, password) => {
+        return UserModel.findOneAndUpdate({
+            email
+        }, {
+            password
+        })
+    }
+
     return {
         findUserByProperty,
         countAll,
         findById,
         add,
-        getListUserByProperties
+        getListUserByProperties,
+        updatePassword,
+        findUserByEmail
     };
 }

@@ -1,6 +1,6 @@
 import user from '../../src/entities/user';
 
-function addUser(
+function UseCaseAddUser(
     username,
     password,
     email,
@@ -21,48 +21,61 @@ function addUser(
         createdAt
     );
 
-    return userRepository.findUserByProperty({ username })
+    return userRepository.findUserByPropertyRepo({ username })
         .then((userWithUserName) => {
             if (userWithUserName.length) {
                 throw new Error(`User with username: ${username} already exist`);
             }
-            return userRepository.findUserByProperty({ email });
+            return userRepository.findUserByPropertyRepo({ email });
     })
         .then((userWithEmail) => {
             if (userWithEmail.length) {
                 throw new Error(`User with email: ${email} already exist`);
             }
-            return userRepository.add(newUser)
+            return userRepository.addRepo(newUser)
         })
 }
 
-function countAll(params, userRepository) {
-    return userRepository.countAll(params)
+function UseCaseChangePassword(password, email, authService, userRepository) {
+    if (password.length < 6) {
+        throw new Error('Password cannot be shorter than 6 characters')
+    }
+
+    const hashPw = authService.encryptPassword(password)
+
+    return userRepository.findUserByEmailRepo(email)
+        .then((user) => {
+            return userRepository.changePasswordRepo(email, hashPw)
+        })
 }
 
-function findById(id, userRepository) {
-    return userRepository.findById(id)
+function UseCaseCountAll(params, userRepository) {
+    return userRepository.countAllRepo(params)
 }
 
-function findUserByProperty(params, userRepository) {
-    return userRepository.findUserByProperty(params)
+function UseCaseFindById(id, userRepository) {
+    return userRepository.findByIdRepo(id)
 }
 
-function login(email, password, userRepository, authService) {
+function UseCaseFindUserByProperty(params, userRepository) {
+    return userRepository.findUserByPropertyRepo(params)
+}
+
+function UseCaseLogin(email, password, userRepository, authService) {
     if (!email || !password) {
         const error = new Error('email and password fields cannot be empty');
         error.statusCode = 401;
         throw error;
     }
-    return userRepository.findUserByProperty({ email })
+    return userRepository.findUserByEmailRepo(email)
         .then((user) => {
-            if(!user.length) {
+            if(!user) {
                 const error = new Error('Invalid email or password');
                 error.statusCode = 401;
                 throw error;
             }
 
-            const isMatch = authService.compare(password, user[0].password);
+            const isMatch = authService.compare(password, user.password);
             if (!isMatch) {
                 const error = new Error('Invalid email or password');
                 error.statusCode = 401;
@@ -70,24 +83,54 @@ function login(email, password, userRepository, authService) {
             }
             const payload = {
                 user: {
-                    id: user[0].id,
-                    email: user[0].email
+                    id: user.id,
+                    email: user.email
                 }
             }
             const token = authService.generateToken(payload)
-          return { token, user: user[0] }
+          return { token, user }
         })
-};
+}
 
-const getListUserByEmails = (emails, userRepository) => {
-    return userRepository.getListUserByEmails(emails)
+const UseCaseGetListUserByEmails = (emails, userRepository) => {
+    return userRepository.getListUserByEmailsRepo(emails)
+}
+
+const UseCaseForgetPassword = (email, userRepository, authService, mailService) => {
+    const newPassword = makePassword(7)
+    const newHashPw = authService.encryptPassword(newPassword)
+
+    return userRepository.findUserByEmailRepo(email)
+        .then((user) => {
+            console.log(email, newHashPw, newPassword)
+            return userRepository.changePasswordRepo(email, newHashPw)
+        })
+        .then(() => {
+            console.log(mailService)
+            return mailService.sendMailForgetPassword(newPassword, email)
+        })
 }
 
 export {
-    addUser,
-    countAll,
-    findById,
-    findUserByProperty,
-    login,
-    getListUserByEmails
+    UseCaseAddUser,
+    UseCaseCountAll,
+    UseCaseFindById,
+    UseCaseFindUserByProperty,
+    UseCaseLogin,
+    UseCaseGetListUserByEmails,
+    UseCaseChangePassword,
+    UseCaseForgetPassword,
+}
+
+
+function makePassword(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+    }
+    return result;
 }

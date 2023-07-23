@@ -4,6 +4,8 @@ import userDbRepositoryMongoDb from '../../database/mongoDB/repositories/user.re
 import authServiceInterface from '../../../applications/services/authService';
 import authServiceImpl from '../../services/auth.services';
 import authMiddleware from '../middlewares/authMiddleware';
+import mailServiceInterface from '../../../applications/services/mailService';
+import mailServiceImpl from '../../services/mail.service';
 
 export default function userRouter(express) {
     const router = express.Router();
@@ -13,17 +15,22 @@ export default function userRouter(express) {
         userDbRepository,
         userDbRepositoryMongoDb,
         authServiceInterface,
-        authServiceImpl
+        authServiceImpl,
+        mailServiceInterface,
+        mailServiceImpl
     );
 
     // GET endpoints
-    router.route('/list').get(authMiddleware, controller.fetchListUserByEmails);
-    router.route('/:id').get(authMiddleware, controller.fetchUserById);
-    router.route('/').get(authMiddleware, controller.fetchUsersByProperty);
+    router.route('/list').get(authMiddleware, controller.ControllerFetchListUserByEmails);
+    router.route('/:id').get(authMiddleware, controller.ControllerFetchUserById);
+    router.route('/').get(authMiddleware, controller.ControllerFetchUsersByProperty);
 
     // POST endpoints
-    router.route('/register').post(controller.register); // api register
-    router.route('/login').post(controller.loginUser); // api login
+    router.route('/register').post(controller.ControllerRegister); // api register
+    router.route('/login').post(controller.ControllerLoginUser); // api login
+
+    router.route('/password').put(authMiddleware, controller.ControllerChangePassword)
+    router.route('/forget-password').post(controller.ControllerResetPassword)
 
     return router;
 }

@@ -25,7 +25,8 @@ mongoDbConnection(mongoose, config, {
     keepAlive: 120,
     connectTimeoutMS: 1000,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 }).connectToMongo();
 
 // enabling CORS for some specific origins only.

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
         width: '100% !important',
     },
     video: {
-        height: '90% !important',
+        height: '88% !important',
         maxHeight: '90% !important',
         width: '100% !important',
         padding: '20px',

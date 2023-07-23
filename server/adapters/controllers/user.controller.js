@@ -1,15 +1,27 @@
-import {addUser, findById, countAll, findUserByProperty, login, getListUserByEmails} from "../../applications/use_case/user_usecase";
+import {
+    UseCaseAddUser,
+    UseCaseFindById,
+    UseCaseCountAll,
+    UseCaseFindUserByProperty,
+    UseCaseLogin,
+    UseCaseGetListUserByEmails,
+    UseCaseChangePassword,
+    UseCaseForgetPassword
+} from "../../applications/use_case/user_usecase";
 
 export default function userController(
     userDbRepository,
     userDbRepositoryImpl,
     authServiceInterface,
-    authServiceImpl
+    authServiceImpl,
+    mailServiceInterface,
+    mailServiceImpl
 ) {
     const dbRepository = userDbRepository(userDbRepositoryImpl());
     const authService = authServiceInterface(authServiceImpl());
+    const mailService = mailServiceInterface(mailServiceImpl());
 
-    const fetchUsersByProperty = (req, res, next) => {
+    const ControllerFetchUsersByProperty = (req, res, next) => {
         const params = {};
         const response = {};
 
@@ -20,7 +32,7 @@ export default function userController(
             }
         }
 
-        findUserByProperty(params, dbRepository)
+        UseCaseFindUserByProperty(params, dbRepository)
             .then((users) => {
                 response.data = users.filter(el => el.email !== req.user.email);
                 return res.json(response);
@@ -28,17 +40,17 @@ export default function userController(
             .catch((error) => next(error));
     }
 
-    const fetchUserById = (req, res, next) => {
-        findById(req.params.id, dbRepository)
+    const ControllerFetchUserById = (req, res, next) => {
+        UseCaseFindById(req.params.id, dbRepository)
             .then((user) => {
                 res.json(user)
             })
             .catch((error) => next(error));
     }
 
-    const register = (req, res, next) => {
+    const ControllerRegister = (req, res, next) => {
         const { username, password, email, role, createdAt } = req.body;
-        addUser(
+        UseCaseAddUser(
             username,
             password,
             email,
@@ -51,16 +63,16 @@ export default function userController(
             .catch((error) => next(error));
     };
 
-    const loginUser = (req, res, next) => {
+    const ControllerLoginUser = (req, res, next) => {
         const { email, password } = req.body;
-        login(email, password, dbRepository, authService)
+        UseCaseLogin(email, password, dbRepository, authService)
             .then((user) => res.json(user))
             .catch((err) => next(err))
     };
 
-    const fetchListUserByEmails = (req, res, next) => {
+    const ControllerFetchListUserByEmails = (req, res, next) => {
         const emails = req.query.emails.split(',').filter(el => el !== req.user.email)
-        getListUserByEmails(emails, dbRepository)
+        UseCaseGetListUserByEmails(emails, dbRepository)
             .then((users) => {
                     return res.json({
                         users
@@ -70,12 +82,41 @@ export default function userController(
             .catch((err) => next(err))
     }
 
+    const ControllerChangePassword = (req, res, next) => {
+        UseCaseChangePassword(req.body.password, req.user.email, authService, dbRepository)
+            .then((u) => {
+                console.log(u)
+                return res.json({
+                    message: 'Change password success'
+                })
+            })
+            .catch((err) => next(err))
+    }
+
+    const ControllerResetPassword = (req, res, next) => {
+        if (req.body.email) {
+            UseCaseForgetPassword(req.body.email, dbRepository, authService, mailService )
+                .then(() => {
+                    return res.json({
+                        message: 'Check your email for a new password'
+                    })
+                })
+                .catch((err) => next(err))
+        } else {
+            return res.status(500).json({
+                message: 'Email is require'
+            })
+        }
+    }
+
     return {
-        fetchUsersByProperty,
-        fetchUserById,
-        register,
-        loginUser,
-        fetchListUserByEmails
+        ControllerFetchUsersByProperty,
+        ControllerFetchUserById,
+        ControllerRegister,
+        ControllerLoginUser,
+        ControllerFetchListUserByEmails,
+        ControllerChangePassword,
+        ControllerResetPassword
     }
 }
 

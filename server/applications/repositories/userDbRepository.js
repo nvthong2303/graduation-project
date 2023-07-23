@@ -1,22 +1,28 @@
 export default function userRepository(repository) {
-    const findUserByProperty = (params) => repository.findUserByProperty(params);
+    const findUserByPropertyRepo = (params) => repository.findUserByProperty(params);
 
-    const countAll = (params) => repository.countAll(params);
+    const countAllRepo = (params) => repository.countAll(params);
 
-    const findById = (id) => repository.findById(id);
+    const findByIdRepo = (id) => repository.findById(id);
 
-    const add = (user) => repository.add(user);
+    const addRepo = (user) => repository.add(user);
 
-    const deleteById = (id) => repository.deleteById(id);
+    const deleteByIdRepo = (id) => repository.deleteById(id);
 
-    const getListUserByEmails = (emails) => repository.getListUserByProperties(emails)
+    const getListUserByEmailsRepo = (emails) => repository.getListUserByProperties(emails)
+
+    const changePasswordRepo = (email, password) => repository.updatePassword(email, password)
+
+    const findUserByEmailRepo = (email) => repository.findUserByEmail(email)
 
     return {
-        findUserByProperty,
-        countAll,
-        findById,
-        add,
-        deleteById,
-        getListUserByEmails
+        findUserByPropertyRepo,
+        countAllRepo,
+        findByIdRepo,
+        addRepo,
+        deleteByIdRepo,
+        getListUserByEmailsRepo,
+        changePasswordRepo,
+        findUserByEmailRepo
     }
 }
