@@ -86,3 +86,20 @@ export const ForgetPasswordApi = async (email: string) => {
     let response = await axios(configs);
     return response;
 }
+
+export const ChangePasswordApi = async (password: string, token: string) => {
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/users/password`,
+        method: 'put',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        data: {
+            password
+        }
+    };
+
+    let response = await axios(configs);
+    return response;
+}

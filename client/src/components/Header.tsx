@@ -27,6 +27,7 @@ import {getListRoomSuccess} from "../store/action/room.action";
 import _ from 'lodash';
 import {getSrcAvatarRoom} from "../common";
 import {PATHS} from "../constants/paths";
+import DialogChangePassword from "./Dialog/DialogChangePassword";
 
 const useStyles = makeStyles({
     header: {
@@ -107,6 +108,7 @@ export default function Header(props: any) {
     const [listRooms, setListRooms] = React.useState<readonly User[]>([]);
     const [listOptions, setListOptions] = React.useState<readonly User[]>([]);
     const [key, setKey] = React.useState<string>('');
+    const [openDialogPw, setOpenDialogPw] = React.useState(false)
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -139,6 +141,14 @@ export default function Header(props: any) {
         } else {
             history.push('/')
         }
+    }
+
+    const handleOpenDialogPassword = () => {
+        setOpenDialogPw(true)
+    }
+
+    const handleCloseDialogPassword = () => {
+        setOpenDialogPw(false)
     }
 
     const handleGetInfo = async (id: string, token: string) => {
@@ -400,10 +410,13 @@ export default function Header(props: any) {
                 MenuListProps={{ onMouseLeave: handleClose }}
             >
                 <MenuItem onClick={() => {
-                    console.log('next link setting user')
+                    handleOpenDialogPassword()
                 }}>Setting profile</MenuItem>
                 <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
             </Menu>
+            {openDialogPw ? (
+                <DialogChangePassword onClose={handleCloseDialogPassword} open={openDialogPw} />
+            ) : null}
         </AppBar>
     )
 }
