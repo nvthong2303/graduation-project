@@ -51,6 +51,7 @@ interface PropsType {
 export default function MessageItem(props: PropsType) {
     const classes = useStyles();
     let detailMessage = <p style={{ margin: '4px 16px' }}>{props.message}</p>;
+    const [show, setShow] = React.useState(false)
 
     const senderMessageStyle: any = {
         item: {
@@ -118,8 +119,12 @@ export default function MessageItem(props: PropsType) {
                 }
             >
                 {props.position === 'left' ? renderAvatar() : null}
-                <Box style={{width: props.position !== 'left' ? 'auto' : '60%', display: 'flex'}}>
-                    {props.position !== 'left' ? (
+                <Box
+                    style={{width: props.position !== 'left' ? 'auto' : '60%', display: 'flex'}}
+                    onMouseEnter={() => setShow(true)}
+                    onMouseLeave={() => setShow(false)}
+                >
+                    {props.position !== 'left' && show ? (
                         <IconButton onClick={handleDeleteMessage} aria-label="delete">
                             <DeleteIcon/>
                         </IconButton>
@@ -135,11 +140,11 @@ export default function MessageItem(props: PropsType) {
                             {detailMessage}
                         </Tooltip>
                     </Box>
-                    {props.position === 'left' ? (
-                        <IconButton aria-label="delete">
-                            <DeleteIcon/>
-                        </IconButton>
-                    ) : null }
+                    {/*{props.position === 'left' && show ? (*/}
+                    {/*    <IconButton aria-label="delete">*/}
+                    {/*        <DeleteIcon/>*/}
+                    {/*    </IconButton>*/}
+                    {/*) : null }*/}
                 </Box>
             </ListItem>
         </Box>
