@@ -293,6 +293,15 @@ io.on('connection', socket => {
         socket.broadcast.to(roomID).emit('user_exit', {id: socket.id});
     });
 
+    socket.on('outRoom_SFU', (data) => {
+        if (data.socketId && data.roomID) {
+            deleteUser(data.socketId, data.roomID);
+            closeReceiverPC(data.socketId);
+            closeSenderPCs(data.socketId);
+            socket.broadcast.to(data.roomID).emit('user_exit', {id: data.socketId});
+        }
+    })
+
     socket.on('endStream_SFU', (data) => {
         if (data.senderSocketID && socket.id) {
             closeReceiverPC(data.senderSocketID);
