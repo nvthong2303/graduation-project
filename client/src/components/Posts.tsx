@@ -59,6 +59,7 @@ const useStyles = makeStyles({
     },
     card: {
         border: '1px solid #7f8387',
+        width: '100%'
     },
     avatar: {
         display: 'flex',
@@ -86,7 +87,7 @@ const useStyles = makeStyles({
 })
 
 export default function Posts(props: any) {
-    const { keyword, categories, setPostUpdate } = props;
+    const { keyword, categories, setPostUpdate, refresh } = props;
     const classes = useStyles();
     const history = useHistory();
     const limit = 10;
@@ -106,7 +107,7 @@ export default function Posts(props: any) {
 
     React.useEffect(() => {
         getListPosts();
-    }, [page, keyword, categories]);
+    }, [page, keyword, categories, refresh]);
 
     const getListPosts = async () => {
         const token = localStorage.getItem('_token_')
@@ -226,8 +227,14 @@ export default function Posts(props: any) {
         setOpenDelete(true)
     }
 
-    const handleUpdatePost = (post: any) => {
-        setPostUpdate(post)
+    const handleUpdatePost = () => {
+        setPostUpdate({
+            id: postSelected._id,
+            title: postSelected.title,
+            category: postSelected.categories,
+            content: postSelected.content
+        });
+        handleClose()
     }
 
     const handleDelete = async () => {

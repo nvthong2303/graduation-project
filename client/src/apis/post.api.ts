@@ -75,3 +75,40 @@ export const DeletePostAPI = async (id: string, token: string) => {
     let response = await axios(configs);
     return response;
 }
+
+export const CreatePostAPI = async (post: any, token: string) => {
+    const data = {
+        title: post.title,
+        content: post.content,
+        categories: post.category
+    }
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/post`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        data
+    };
+    let response = await axios(configs);
+    return response;
+}
+
+export const UpdatePostAPI = async (id: string, post: any, token: string) => {
+    const data = {
+        content: post.content,
+        categories: post.category
+    }
+    let configs: AxiosRequestConfig = {
+        url: `${serverUrl}/${endpointVersion}/post/${id}`,
+        method: 'put',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        data
+    };
+    let response = await axios(configs);
+    return response;
+}
