@@ -3,11 +3,13 @@ import {
     Box,
     ListItem,
     Tooltip,
-    ListItemAvatar,
+    IconButton ,
     Avatar,
 } from '@mui/material';
 import React from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {makeStyles} from "@mui/styles";
+import { socketRef} from "../../socket/socket-io";
 
 const useStyles = makeStyles({
     root: {
@@ -37,11 +39,13 @@ const useStyles = makeStyles({
     }
 });
 interface PropsType {
+    id: string;
     src?: string;
     position?: 'left' | 'right';
     message?: string;
     timestamp?: string
     sender: string
+    roomId: string
 }
 
 export default function MessageItem(props: PropsType) {
@@ -56,7 +60,7 @@ export default function MessageItem(props: PropsType) {
             alignItems: 'flex-end'
         },
         box: {
-            marginRight: 'auto',
+            // marginRight: 'auto',
             backgroundColor: '#e0e0e0',
             borderRadius: '16px',
             fontSize: 15,
@@ -97,8 +101,15 @@ export default function MessageItem(props: PropsType) {
         )
     }
 
+    const handleDeleteMessage = () => {
+        socketRef.current?.emit("delete", {
+            room: props.roomId,
+            messageId: props.id
+        })
+    }
+
     return (
-        <Box className="huhuhuhuhuhuh">
+        <Box>
             <ListItem
                 style={
                     props.position === 'right'
@@ -107,7 +118,12 @@ export default function MessageItem(props: PropsType) {
                 }
             >
                 {props.position === 'left' ? renderAvatar() : null}
-                <Box style={{ width: '60%' }}>
+                <Box style={{width: props.position !== 'left' ? 'auto' : '60%', display: 'flex'}}>
+                    {props.position !== 'left' ? (
+                        <IconButton onClick={handleDeleteMessage} aria-label="delete">
+                            <DeleteIcon/>
+                        </IconButton>
+                    ) : null }
                     <Box
                         sx={
                             props.position === 'right'
@@ -119,8 +135,13 @@ export default function MessageItem(props: PropsType) {
                             {detailMessage}
                         </Tooltip>
                     </Box>
+                    {props.position === 'left' ? (
+                        <IconButton aria-label="delete">
+                            <DeleteIcon/>
+                        </IconButton>
+                    ) : null }
                 </Box>
             </ListItem>
         </Box>
-    )
+    );
 }

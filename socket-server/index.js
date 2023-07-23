@@ -1,13 +1,12 @@
 const express = require('express');
 const app = express();
 const http = require('http');
-let wrtc = require("wrtc");
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 const config = require('./config/config');
 
 const mongoose = require('mongoose');
-const { handleSaveMessage } = require("./handles/messages/message.repository");
+const { handleSaveMessage, handleDeleteMessage } = require("./handles/messages/message.repository");
 
 let receiverPCs = {};
 let senderPCs = {};
@@ -38,10 +37,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on("message", (message) => {
-        io.to(message.room).emit('receiveMessage', message);
         // console.log(`Đã gửi tin nhắn đến channel "${message.room}": ${message.content}`);
 
-        handleSaveMessage(message);
+        handleSaveMessage(message).then((message) => {
+            io.to(message.room).emit('receiveMessage', message);
+        });
+    });
+
+    socket.on("delete", (message) => {
+        console.log(message)
+        io.to(message.room).emit('receiveDeleteMessage', message.messageId);
+        // console.log(`Đã gửi tin nhắn đến channel "${message.room}": ${message.content}`);
+
+        handleDeleteMessage(message.messageId);
     });
 
     socket.on("disconnect", () => {

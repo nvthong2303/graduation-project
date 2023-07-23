@@ -12,7 +12,12 @@ const handleSaveMessage = async (message) => {
     return newMessage.save();
 }
 
+const handleDeleteMessage = async (id) => {
+    return MessageModel.findByIdAndDelete(id)
+}
+
 module.exports = {
-    handleSaveMessage
+    handleSaveMessage,
+    handleDeleteMessage
 }
 

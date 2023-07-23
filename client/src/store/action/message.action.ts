@@ -25,6 +25,13 @@ export const receiveMessageSuccess = (data: Object) => ({
     }
 })
 
+export const receiveMessageDeleteSuccess = (data: Object) => ({
+    type: types.RECEIVE_DELETE_MESSAGE_SUCCESS,
+    payload: {
+        data
+    }
+})
+
 export const clearListMessage = () => ({
     type: types.CLEAR_LIST_MESSAGE
 });

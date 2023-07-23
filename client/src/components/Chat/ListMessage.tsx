@@ -69,7 +69,7 @@ export default function ListMessage(props: any) {
                 dispatch(getListMessageSuccess(res.data.messages ?? []))
                 setTotal(res.data.total)
 
-                if (res.data.total === 0) {
+                if (res.data.messages.length === 0) {
                     setHasMore(false)
                 }
             }
@@ -88,9 +88,11 @@ export default function ListMessage(props: any) {
             return (
                 <MessageItem
                     key={index}
+                    id={item._id}
                     position={position as any}
                     message={item.content}
                     sender={item.senderName}
+                    roomId={room._id}
                 />
             );
         });

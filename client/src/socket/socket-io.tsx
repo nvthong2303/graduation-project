@@ -2,7 +2,7 @@ import React from 'react';
 import io from 'socket.io-client';
 import {room} from "../store/reducer/room.reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {receiveMessageSuccess} from "../store/action/message.action";
+import {receiveMessageDeleteSuccess, receiveMessageSuccess} from "../store/action/message.action";
 import {SOCKET_SERVER_URL} from "../utils/config";
 
 const subRoom = [];
@@ -49,6 +49,10 @@ export default function SocketIO(props: any) {
 
             socketRef.current?.on('receiveMessage', (content: any) => {
                 dispatch(receiveMessageSuccess(content))
+            });
+
+            socketRef.current?.on('receiveDeleteMessage', (messageId: string) => {
+                dispatch(receiveMessageDeleteSuccess(messageId))
             });
         }
     }, [JSON.stringify(currentRoom)])

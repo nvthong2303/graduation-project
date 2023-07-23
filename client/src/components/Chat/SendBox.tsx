@@ -40,7 +40,7 @@ export default function SendBox(props: any) {
     }
 
     const handleSendMessage = async () => {
-        const newMessage: message = {
+        const newMessage = {
             content: contentMessage,
             sender: infoUser.email,
             senderName: infoUser.fullName,

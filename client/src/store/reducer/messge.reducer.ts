@@ -2,7 +2,7 @@ import * as types from '../../constants/action';
 import _ from 'lodash';
 
 export interface message {
-    _id?: string,
+    _id: string,
     content: string,
     sender: string,
     senderName: string,
@@ -40,6 +40,14 @@ export const messageReducer = (state = initialState, action: any) => {
             let { data } = action.payload;
             let newState = _.cloneDeep(state);
             newState.listMessage =  _.uniqBy([data, ...newState.listMessage], 'createdAt');
+            return newState
+        }
+
+        case types.RECEIVE_DELETE_MESSAGE_SUCCESS: {
+            let { data } = action.payload;
+            let newState = _.cloneDeep(state);
+            const newListMessage = newState.listMessage.filter(el => el._id !== data)
+            newState.listMessage =  newListMessage;
             return newState
         }
 
