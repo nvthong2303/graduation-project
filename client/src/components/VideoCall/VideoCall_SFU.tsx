@@ -6,6 +6,25 @@ import {useSelector} from "react-redux";
 import {Button, Typography} from "@mui/material";
 import {Player} from "@lottiefiles/react-lottie-player";
 import waitingJson from "../../assets/animation/waiting.json";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles({
+    root: {
+        height: '100% !important',
+        width: '100% !important',
+    },
+    video: {
+        height: '90% !important',
+        maxHeight: '90% !important',
+        width: '100% !important',
+        padding: '20px',
+        display: 'inline-block'
+    },
+    button: {
+
+    }
+});
+
 
 export type WebRTCUser = {
     id: string;
@@ -33,6 +52,7 @@ interface Props {
 
 const VideoCall_SFU = (props: Props) => {
     const { room, user } = props;
+    const classes = useStyles();
     const socketRef = useRef<SocketIOClient.Socket>();
     const localStreamRef = useRef<MediaStream>();
     const sendPCRef = useRef<RTCPeerConnection>();
@@ -135,7 +155,7 @@ const VideoCall_SFU = (props: Props) => {
             );
 
             if (!socketRef.current) return;
-            console.log(Date.now(), 'emit senderOffer_SFU')
+            // console.log(Date.now(), 'emit senderOffer_SFU')
             socketRef.current.emit("senderOffer_SFU", {
                 sdp,
                 senderSocketID: socketRef.current.id,
@@ -182,18 +202,6 @@ const VideoCall_SFU = (props: Props) => {
 
     const getLocalStream = useCallback(async () => {
         try {
-            // const stream = await navigator.mediaDevices.getUserMedia({
-            //     audio: true,
-            //     video: {
-            //         width: 240,
-            //         height: 240,
-            //     },
-            // });
-            // if (room.admin === user.email) {
-            //     // console.log(Date.now(), "=====> set localVideoRef")
-            //     localStreamRef.current = stream;
-            //     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-            // }
             createSenderPeerConnection();
             await createSenderOffer();
             if (!socketRef.current) return;
@@ -217,7 +225,6 @@ const VideoCall_SFU = (props: Props) => {
                 },
             });
             localStreamRef.current = stream;
-            // console.log(Date.now(), "=====> set localVideoRef")
             if (localVideoRef.current) localVideoRef.current.srcObject = stream;
             createSenderPeerConnection();
             await createSenderOffer();
@@ -231,25 +238,20 @@ const VideoCall_SFU = (props: Props) => {
         getLocalStream();
 
         socketRef.current.on("userEnter_SFU", (data: { id: string, name: string }) => {
-            console.log(Date.now(), "********** receive userEnter_SFU")
+            // console.log(Date.now(), "********** receive userEnter_SFU")
             createReceivePC(data.id, data.name);
         });
 
-        socketRef.current.on(
-            "allUsers_SFU",
-            (data: { users: Array<{ id: string, name: string }> }) => {
+        socketRef.current.on("allUsers_SFU", (data: { users: Array<{ id: string, name: string }> }) => {
                 data.users.forEach((user) => createReceivePC(user.id, user.name));
-            }
-        );
+            });
 
         socketRef.current.on("user_exit", (data: { id: string }) => {
             closeReceivePC(data.id);
             setUsers((users) => users.filter((user) => user.id !== data.id));
         });
 
-        socketRef.current.on(
-            "getSenderAnswer_SFU",
-            async (data: { sdp: RTCSessionDescription }) => {
+        socketRef.current.on("getSenderAnswer_SFU", async (data: { sdp: RTCSessionDescription }) => {
                 try {
                     // console.log(Date.now(),"********** getSenderAnswer_SFU")
                     if (!sendPCRef.current) return;
@@ -259,12 +261,9 @@ const VideoCall_SFU = (props: Props) => {
                 } catch (error) {
                     console.log(error);
                 }
-            }
-        );
+            });
 
-        socketRef.current.on(
-            "getSenderCandidate_SFU",
-            async (data: { candidate: RTCIceCandidateInit }) => {
+        socketRef.current.on("getSenderCandidate_SFU", async (data: { candidate: RTCIceCandidateInit }) => {
                 try {
                     // console.log(Date.now(),"********** getSenderCandidate_SFU")
                     if (!(data.candidate && sendPCRef.current)) return;
@@ -274,12 +273,9 @@ const VideoCall_SFU = (props: Props) => {
                 } catch (error) {
                     console.log(error);
                 }
-            }
-        );
+            });
 
-        socketRef.current.on(
-            "getReceiverAnswer_SFU",
-            async (data: { id: string; sdp: RTCSessionDescription }) => {
+        socketRef.current.on("getReceiverAnswer_SFU", async (data: { id: string; sdp: RTCSessionDescription }) => {
                 try {
                     // console.log(Date.now(), "********** getReceiverAnswer_SFU")
                     const pc: RTCPeerConnection = receivePCsRef.current[data.id];
@@ -288,12 +284,9 @@ const VideoCall_SFU = (props: Props) => {
                 } catch (error) {
                     console.log(error);
                 }
-            }
-        );
+            });
 
-        socketRef.current.on(
-            "getReceiverCandidate_SFU",
-            async (data: { id: string; candidate: RTCIceCandidateInit }) => {
+        socketRef.current.on("getReceiverCandidate_SFU", async (data: { id: string; candidate: RTCIceCandidateInit }) => {
                 try {
                     // console.log(Date.now(),"********** getReceiverCandidate_SFU")
                     const pc: RTCPeerConnection = receivePCsRef.current[data.id];
@@ -302,8 +295,7 @@ const VideoCall_SFU = (props: Props) => {
                 } catch (error) {
                     console.log(error);
                 }
-            }
-        );
+            });
 
         return () => {
             if (socketRef.current) {
@@ -334,52 +326,107 @@ const VideoCall_SFU = (props: Props) => {
             roomID: room._id,
         })
         setJoin(false);
-    }
-
-    // console.log("===;==>", users)
+    };
 
     return (
-        <div>
-            {join ? (
-                <video
-                    style={{
-                        width: 240,
-                        height: 240,
-                        backgroundColor: "black",
-                    }}
-                    muted
-                    ref={localVideoRef}
-                    autoPlay
-                />
-            ) : users.length === 0 ? (
-                <>
-                    <Player
-                        controls={false}
-                        autoplay
-                        loop
-                        src={waitingJson}
-                        style={{ width: '50%' }}
-                    ></Player>
-                    <Typography variant='subtitle1' style={{
+        <div className={classes.root}>
+            <div className={classes.video}>
+                {join ? (
+                    <video
+                        style={{
+                            width: users.length === 0
+                                ? '100%'
+                                : users.length < 4
+                                    ? '45%'
+                                    : users.length < 9
+                                        ? '45%'
+                                        : '300px' ,
+                            height: users.length === 0
+                                ? '100%'
+                                : users.length < 4
+                                    ? '49%'
+                                    : users.length < 9
+                                        ? '30%'
+                                        : '250px',
+                            backgroundColor: "black",
+                        }}
+                        muted
+                        ref={localVideoRef}
+                        autoPlay
+                    />
+                ) : users.length === 0 ? (
+                    <div style={{
                         width: '100%',
-                        textAlign: 'center',
-                        fontSize: 20,
-                        fontWeight: 700
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignContent: 'center'
                     }}>
-                        Join the meeting and experience together ...
-                    </Typography>
-                </>
-            ) : null}
-            {users.map((user, index) => (
-                <Video key={index} stream={user.stream} name={user.name} />
-            ))}
+                        <Player
+                            controls={false}
+                            autoplay
+                            loop
+                            src={waitingJson}
+                            style={{ width: '50%' }}
+                        ></Player>
+                        <Typography variant='subtitle1' style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            fontSize: 20,
+                            fontWeight: 700
+                        }}>
+                            Join the meeting and experience together ...
+                        </Typography>
+                    </div>
+                ) : null}
+                {users.map((user, index) => (
+                    <Video
+                        key={index}
+                        stream={user.stream}
+                        name={user.name}
+                        style={{
+                            width: join
+                                ? users.length < 4
+                                    ? '45%'
+                                    : users.length < 9
+                                        ? '30%'
+                                        : '300px' :
+                                users.length === 1
+                                    ? '100%'
+                                    : users.length < 5
+                                        ? '45%'
+                                        : users.length < 10
+                                            ? '30%'
+                                            : '300px',
+                            height: join
+                                ? users.length < 4
+                                    ? '45%'
+                                    : users.length < 9
+                                        ? '30%'
+                                        : '250px' :
+                                users.length === 1
+                                    ? '100%'
+                                    : users.length < 5
+                                        ? '45%'
+                                        : users.length < 10
+                                            ? '30%'
+                                            : '250px',
+                        }}
+                    />
+                ))}
+            </div>
             <Button onClick={() => {
                 if (! join) {
                     startCall()
                 } else {
                     outCall()
                 }
-            }}>{join ? 'End Call' : 'Start Call'}</Button>
+            }}>{join ? 'End Call' : 'Start Call'}{users.length === 0
+                ? '100%'
+                : users.length < 4
+                    ? '50%'
+                    : users.length < 9
+                        ? '30%'
+                        : '300px'}{}</Button>
         </div>
     );
 };

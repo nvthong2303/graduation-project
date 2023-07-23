@@ -45,6 +45,20 @@ export default function VideoCall(props: any) {
         setStreaming(false);
     };
 
+    React.useEffect(() => {
+    //     setJoin(false)
+    //     setUsers([])
+    //     // @ts-ignore
+    //     localVideoRef.current = undefined;
+    //     localStreamRef.current = undefined;
+    //     getLocalStream();
+        setStreaming(false);
+
+        setTimeout(() => {
+            setStreaming(true)
+        }, 300)
+    }, [currentRoom._id])
+
     return (
         <>
             {currentRoom.admin && infoUser.email && streaming ? (

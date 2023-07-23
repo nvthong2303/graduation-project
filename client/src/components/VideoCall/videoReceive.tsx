@@ -5,13 +5,11 @@ const useStyles = makeStyles({
     container: {
         position: 'relative',
         display: 'inline-block',
-        width: '240px !important',
-        height: '240px',
         margin: '0px 5px'
     },
     videoContainer: {
-        width: '240px',
-        height: '220px',
+        width: '100%',
+        height: '100%',
         backgroundColor: 'black'
     }
 });
@@ -20,10 +18,11 @@ interface Props {
     name?: string;
     email?: string;
     stream: MediaStream,
-    muted?: boolean
+    muted?: boolean,
+    style?: any
 }
 
-export default function Video({ stream, muted, name }: Props) {
+export default function Video({ stream, muted, name, style }: Props) {
     const classes = useStyles();
     const ref = React.useRef<HTMLVideoElement>(null);
     const [isMuted, setIsMuted] = React.useState<boolean>(false);
@@ -34,9 +33,9 @@ export default function Video({ stream, muted, name }: Props) {
     }, [stream, muted])
 
     return (
-        <div className={classes.container}>
+        <div className={classes.container} style={style}>
             <video className={classes.videoContainer} ref={ref} muted={isMuted} autoPlay />
-            <p style={{ height: '18px', margin: 0 }}>{name}</p>
+            <p style={{ height: '18px', margin: 0, textAlign: 'left' }}>{name}</p>
         </div>
     )
 }

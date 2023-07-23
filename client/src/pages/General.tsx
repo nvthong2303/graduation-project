@@ -71,7 +71,8 @@ export default function General(props: any) {
     const user = useSelector((state: any) => state.userReducer.userInfo);
     const [categoriesSelected, setCategoriesSelected] = React.useState<any[]>([])
     const [keyword, setKeyword] = React.useState('');
-    const [postUpdate, setPostUpdate] = React.useState<any>();
+    const [postUpdate, setPostUpdate] = React.useState<any>(null);
+    const [refresh, setRefresh] = React.useState(false);
 
     React.useEffect(() => {
         const userId = localStorage.getItem('_user_id_')
@@ -92,6 +93,10 @@ export default function General(props: any) {
         } else {
             history.push('/login')
         }
+    }
+
+    const handleUpdate = (post: any) => {
+        setPostUpdate(post)
     }
 
     return (
@@ -122,7 +127,8 @@ export default function General(props: any) {
                     <Posts
                         keyword={keyword}
                         categories={categoriesSelected.map(el=> el.category).toString()}
-                        setPostUpdate={setPostUpdate}
+                        setPostUpdate={handleUpdate}
+                        refresh={refresh}
                     />
                 </Grid>
                 <Grid
@@ -130,7 +136,7 @@ export default function General(props: any) {
                     item
                     xs={3}
                 >
-                    <LeftPostPage />
+                    <LeftPostPage post={postUpdate} setKeyword={setKeyword} setRefresh={setRefresh}/>
                 </Grid>
             </Grid>
         </div>

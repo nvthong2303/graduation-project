@@ -27,7 +27,7 @@ const useStyles = makeStyles({
         height: '100% !important',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     workSpace: {
         height: 'calc(100% - 40px)',
@@ -151,7 +151,7 @@ export default function Chat() {
                             <Grid item xs={3.5} sx={{ padding: '0px !important' }}>
                                 <ChatDetail room={currentRoom} />
                             </Grid>
-                            <Grid item xs={8.5}>
+                            <Grid item xs={8.5} sx={{ maxHeight: '100vh' }}>
                                 <VideoCall />
                                 {/*<VideoCall_2P2 />*/}
                                 {/*<VideoCall_SF4 />*/}
