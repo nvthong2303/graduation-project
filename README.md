@@ -28,19 +28,21 @@ NVT-Teams: This is a graduation project, a system that allows users to message o
 ## Features
 NVT-Teams: Description of features
 
-* Include a list of: Chat, Video call, Create/Update/Delete/Like/Comment post
-* all the many beautiful
-* web server features: 
+**Include a list of**
+* Chat / delete message.
+* Video call 1-1, 1-n, n-n.
+* Create/Update/AddMembers/RemoveMembers room.
+* Create/Update/Delete/Like/Comment post.
 
 
 ## Requirements
 The application can be run locally or in a docker container, the requirements for each setup are listed below.
 
 
-### EGO
-A running instance of [EGO](https://github.com/overture-stack/ego/) is required to generate the Authorization tokens and to provide the verification key.
-
-[EGO](https://github.com/overture-stack/ego/) can be cloned and run locally if no public server is available. 
+### NODEJS
+- Install [NVM](https://github.com/nvm-sh/nvm) to manage NodeJS versions
+- Install [Node.js](https://nodejs.org/en/) version 14.0.0 to install module
+- Install [Node.js](https://nodejs.org/en/) version 18.0.0 to run (recommend)
 
 
 ### Local
