@@ -1,6 +1,6 @@
 module.exports = {
     port: 3002,
     mongo: {
-        uri: 'mongodb+srv://user:thong2303@cluster0.i3skgb6.mongodb.net/'
+        uri: 'mongodb+srv://user:thong2303@cluster0.i3skgb6.mongodb.net/do-an?retryWrites=true&w=majority'
     },
 }
