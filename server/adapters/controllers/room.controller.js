@@ -9,7 +9,8 @@ import {
     deleteById,
     UseCaseUpdateRoomById,
     createChatUserById,
-    UseCaseOutRoom
+    UseCaseOutRoom,
+    UseCaseCreateChatUserByEmail
 } from "../../applications/use_case/roomChat_usecase";
 
 
@@ -133,9 +134,14 @@ export default function roomController(
                         data: rooms[0]
                     })
                 } else {
-                    return res.json({
-                        message: 'Not found this conversation'
-                    });
+                    UseCaseCreateChatUserByEmail(req.user.id, req.params.email, dbRepository, _userDbRepository)
+                        .then((room) => {
+                            res.json({
+                                data: room
+                            })
+                        }).catch((error) => {
+                            next(error)
+                    })
                 }
             })
             .catch((error) => next(error))

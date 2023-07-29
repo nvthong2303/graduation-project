@@ -5,3 +5,4 @@
 /server/node_modules
 /socket-server/node_modules
 /media-server/node_modules
+/test/test/node_modules

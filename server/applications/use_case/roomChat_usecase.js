@@ -21,6 +21,48 @@ function deleteById(email, id, roomRepository) {
       })
 }
 
+function UseCaseCreateChatUserByEmail(creatorId, partnerEmail, roomRepository, userRepository) {
+    let creator;
+    return userRepository.findByIdRepo(creatorId)
+        .then((_creator) => {
+            creator = _creator;
+            return userRepository.findUserByEmailRepo(partnerEmail)
+        })
+        .then((partner) => {
+            const _room = {
+                title: `${creator.username}-${partner.username}`,
+                members: [
+                    creator.email,
+                    partner.email,
+                ],
+                admin: creator.email,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                lastMessage: `${creator.username} start conversation`,
+                description: `${creator.username}-${partner.username}`,
+                lastSender: creator.email
+            }
+            const newRoom = room(
+                _room.title,
+                _room.members,
+                _room.avatar,
+                _room.lastMessage,
+                _room.admin,
+                _room.lastSender,
+                _room.createdAt,
+                _room.updatedAt,
+                _room.description,
+                'chat'
+            )
+            console.log(newRoom)
+            return roomRepository.createRoom(newRoom)
+        })
+        .catch(err => {
+            console.log('error when create room chat user to user', err)
+            throw new Error('Not found creator')
+        })
+}
+
 function createChatUserById(creatorId, partnerId, roomRepository, userRepository) {
     let creator;
     return userRepository.findById(creatorId)
@@ -152,7 +194,6 @@ function getAdminRoomById(roomId, roomRepository) {
     return roomRepository.getAdminRoomById(roomId);
 }
 
-
 export {
     findByProperty,
     findById,
@@ -164,5 +205,6 @@ export {
     UseCaseRemoveMember,
     getAdminRoomById,
     createChatUserById,
-    UseCaseOutRoom
+    UseCaseOutRoom,
+    UseCaseCreateChatUserByEmail
 }
