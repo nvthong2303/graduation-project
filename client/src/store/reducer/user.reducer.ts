@@ -16,13 +16,15 @@ export const userReducer = (state = initialState, action: any) => {
         case types.GET_INFO_USER_SUCCESS: {
             let { data } = action.payload;
             let newState = _.cloneDeep(state);
-            newState.userInfo = {
-                email: action.payload.data.user.email,
-                token: action.payload.data.token,
-                fullName: action.payload.data.user.username,
-                userId: action.payload.data.user._id,
-                role: action.payload.data.user.role,
-            };
+            if (action.payload.data.user) {
+                newState.userInfo = {
+                    email: action.payload.data.user.email,
+                    token: action.payload.data.token,
+                    fullName: action.payload.data.user.username,
+                    userId: action.payload.data.user._id,
+                    role: action.payload.data.user.role,
+                };
+            }
             return newState;
         }
 

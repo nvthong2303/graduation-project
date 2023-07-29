@@ -34,7 +34,7 @@ const corsOptions = {
     // origin : ['http://localhost:3000', 'http://localhost:3003'],
 }
 
-// app.use(cors(corsOptions))
+app.use(cors())
 // api check server
 app.get('/test', (req, res) => {
     res.send({

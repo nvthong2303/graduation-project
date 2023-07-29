@@ -1,6 +1,6 @@
 import React from 'react'
-import {makeStyles} from "@mui/styles";
-import {Typography, TextField, InputAdornment, IconButton, Button, Checkbox, Divider} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Typography, TextField, InputAdornment, IconButton, Button, Checkbox, Divider } from "@mui/material";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
@@ -10,9 +10,9 @@ import teamsIcon from '../assets/images/streaming.png';
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {ForgetPasswordApi, LoginApi, RegisterApi} from "../apis/user.api";
+import { ForgetPasswordApi, LoginApi, RegisterApi } from "../apis/user.api";
 import { getInfoUserSuccess } from "../store/action/user.action";
-import {useSnackbar} from "notistack";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles({
     root: {
@@ -125,7 +125,7 @@ function LoginRegister() {
         try {
             const res = await LoginApi(data)
 
-            if (res.status === 200) {
+            if (res.status === 200 && res.data) {
                 localStorage.setItem('_token_', res.data.token);
                 localStorage.setItem('_user_id_', res.data.user._id);
                 dispatch(getInfoUserSuccess(res.data))
@@ -244,7 +244,7 @@ function LoginRegister() {
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
-                                    )
+                                )
                             }}
                             variant="standard"
                             value={formikLogin.values.password}
@@ -262,13 +262,13 @@ function LoginRegister() {
                                 marginTop: '8px'
                             }}
                         >
-                            <div style={{ display: 'flex', alignItems: 'center'}}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Checkbox
                                     checked={rememberMe}
                                     onClick={() => {
                                         setRememberMe(!rememberMe)
                                     }
-                                }/>
+                                    } />
                                 <Typography variant='body2'>Remember me</Typography>
                             </div>
 
@@ -282,7 +282,7 @@ function LoginRegister() {
                         </div>
                         <Divider sx={{
                             marginTop: '16px'
-                        }}/>
+                        }} />
 
                         <Button
                             sx={{
@@ -295,7 +295,7 @@ function LoginRegister() {
 
                         <Divider sx={{
                             marginTop: '48px'
-                        }}/>
+                        }} />
                         <Typography
                             sx={{ display: 'flex', alignItems: 'center' }}
                             variant='caption'
@@ -438,7 +438,7 @@ function LoginRegister() {
 
                         <Divider sx={{
                             marginTop: '32px'
-                        }}/>
+                        }} />
                         <Typography
                             sx={{ display: 'flex', alignItems: 'center' }}
                             variant='caption'
@@ -494,7 +494,7 @@ function LoginRegister() {
 
                         <Divider sx={{
                             marginTop: '32px'
-                        }}/>
+                        }} />
                         <Typography
                             sx={{ display: 'flex', alignItems: 'center' }}
                             variant='caption'
