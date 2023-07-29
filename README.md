@@ -28,19 +28,18 @@ concurrently --names "Server,Client,Socket,Media" --prefix-colors "green,red,blu
 
 TODO: Replace with introduction
 
-## Features
-TODO: Description of features
+## Tính năng
+T-teams
 
-* Include a list of
-* all the many beautiful
-* web server features
-
-
-## Requirements
-The application can be run locally or in a docker container, the requirements for each setup are listed below.
+* Chat
+* Gọi video
+* Tạo, sửa, xóa, like, bình luận bài viết
 
 
-### EGO
+## Yêu cầu
+Hệ thống yêu cầu môi trường NodeJS, MongoDB.
+
+### NODEJS
 A running instance of [EGO](https://github.com/overture-stack/ego/) is required to generate the Authorization tokens and to provide the verification key.
 
 [EGO](https://github.com/overture-stack/ego/) can be cloned and run locally if no public server is available. 
