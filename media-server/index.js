@@ -290,7 +290,7 @@ io.on('connection', socket => {
         closeReceiverPC(socket.id);
         closeSenderPCs(socket.id);
 
-        socket.broadcast.to(roomID).emit('user_exit', {id: socket.id});
+        socket.broadcast.to(roomID).emit('user_exit', { id: socket.id });
     });
 
     socket.on('outRoom_SFU', (data) => {
@@ -298,7 +298,7 @@ io.on('connection', socket => {
             deleteUser(data.socketId, data.roomID);
             closeReceiverPC(data.socketId);
             closeSenderPCs(data.socketId);
-            socket.broadcast.to(data.roomID).emit('user_exit', {id: data.socketId});
+            socket.broadcast.to(data.roomID).emit('user_exit', { id: data.socketId });
         }
     })
 
@@ -308,7 +308,7 @@ io.on('connection', socket => {
             deleteUser(socket.id, data.roomID);
             delete senderPCs[socket.id];
             // closeSenderPCs(socket.id);
-            socket.broadcast.to(data.roomID).emit('user_exit', {id: data.senderSocketID});
+            socket.broadcast.to(data.roomID).emit('user_exit', { id: data.senderSocketID });
         }
     })
 
@@ -320,9 +320,9 @@ io.on('connection', socket => {
                 socket.to(socket.id).emit('room_full');
                 return;
             }
-            users[data.room].push({id: socket.id, email: data.email});
+            users[data.room].push({ id: socket.id, email: data.email });
         } else {
-            users[data.room] = [{id: socket.id, email: data.email}];
+            users[data.room] = [{ id: socket.id, email: data.email }];
         }
         socketToRoom[socket.id] = data.room;
 
@@ -335,15 +335,15 @@ io.on('connection', socket => {
     });
 
     socket.on('offer_2P2', data => {
-        socket.to(data.offerReceiveID).emit('getOffer_2P2', {sdp: data.sdp, offerSendID: data.offerSendID, offerSendEmail: data.offerSendEmail});
+        socket.to(data.offerReceiveID).emit('getOffer_2P2', { sdp: data.sdp, offerSendID: data.offerSendID, offerSendEmail: data.offerSendEmail });
     });
 
     socket.on('answer_2P2', data => {
-        socket.to(data.answerReceiveID).emit('getAnswer_2P2', {sdp: data.sdp, answerSendID: data.answerSendID});
+        socket.to(data.answerReceiveID).emit('getAnswer_2P2', { sdp: data.sdp, answerSendID: data.answerSendID });
     });
 
     socket.on('candidate_2P2', data => {
-        socket.to(data.candidateReceiveID).emit('getCandidate_2P2', {candidate: data.candidate, candidateSendID: data.candidateSendID});
+        socket.to(data.candidateReceiveID).emit('getCandidate_2P2', { candidate: data.candidate, candidateSendID: data.candidateSendID });
     })
 });
 
@@ -364,7 +364,14 @@ app.get('/delete', (req, res) => {
     res.json({
         message: 'reset success'
     })
+});
+
+app.get('/test', (req, res) => {
+    res.json({
+        message: 'welcome to media server'
+    })
 })
+
 
 server.listen(PORT, () => {
     console.log(`media server running on ${PORT}`);

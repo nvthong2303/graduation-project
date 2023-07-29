@@ -7,7 +7,7 @@ import config from './config/config.js';
 import mongoDbConnection from './frameworks/database/mongoDB/connection';
 // middlewares
 import errorHandlingMiddleware from "./frameworks/webserver/middlewares/errorHandlingMiddleware";
-import cors  from 'cors';
+import cors from 'cors';
 
 const app = express();
 const server = require('http').createServer(app)
@@ -30,13 +30,13 @@ mongoDbConnection(mongoose, config, {
 }).connectToMongo();
 
 // enabling CORS for some specific origins only.
-let corsOptions = {
+const corsOptions = {
     // origin : ['http://localhost:3000', 'http://localhost:3003'],
 }
 
 app.use(cors(corsOptions))
 // api check server
-app.get('/test', (req, res) =>{
+app.get('/test', (req, res) => {
     res.send({
         message: "hello world"
     });

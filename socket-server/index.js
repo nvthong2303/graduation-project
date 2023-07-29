@@ -70,8 +70,15 @@ app.get('/', (req, res) => {
         senderPCs,
         users,
         socketToRoom,
+        message: 'welcome to socket server'
     });
 });
+
+app.get('/test', (req, res) => {
+    res.json({
+        message: 'welcome to socket server'
+    })
+})
 
 server.listen(config.port, () => {
     console.log(`socket-server is running on ${config.port}`);
