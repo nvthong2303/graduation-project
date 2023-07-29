@@ -78,7 +78,7 @@ export default function Chat() {
                 handleGetDetailRoom(id)
             }
         }
-    }, [JSON.stringify(currentRoom)])
+    }, [JSON.stringify(currentRoom), email, id])
 
     const handleGetDetailRoom = async (id: string) => {
         const token = localStorage.getItem("_token_")
@@ -100,6 +100,8 @@ export default function Chat() {
                 if (res.status === 200) {
                     if (res.data.data) {
                         dispatch(getDetailRoomSuccess(res.data.data))
+                    } else {
+                        console.log(res.data)
                     }
                 } else {
                     enqueueSnackbar('Not found class', {

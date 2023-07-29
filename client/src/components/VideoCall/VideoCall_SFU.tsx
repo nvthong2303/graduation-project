@@ -420,13 +420,7 @@ const VideoCall_SFU = (props: Props) => {
                 } else {
                     outCall()
                 }
-            }}>{join ? 'End Call' : 'Start Call'}{users.length === 0
-                ? '100%'
-                : users.length < 4
-                    ? '50%'
-                    : users.length < 9
-                        ? '30%'
-                        : '300px'}{}</Button>
+            }}>{join ? 'End Call' : 'Start Call'}</Button>
         </div>
     );
 };

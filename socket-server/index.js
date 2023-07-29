@@ -29,7 +29,6 @@ mongoose.connect(config.mongo.uri)
 io.on('connection', (socket) => {
     socket.on("join", (roomId) => {
         try {
-            // console.log(`Client ${roomId} đã tham gia roomId "${roomId}".`);
             socket.join(roomId);
         } catch (error) {
             console.log(error);
@@ -45,7 +44,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on("delete", (message) => {
-        console.log(message)
         io.to(message.room).emit('receiveDeleteMessage', message.messageId);
         // console.log(`Đã gửi tin nhắn đến channel "${message.room}": ${message.content}`);
 
