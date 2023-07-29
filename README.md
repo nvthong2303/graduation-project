@@ -1,5 +1,6 @@
 concurrently --names "Server,Client,Socket,Media" --prefix-colors "green,red,blue,white" --prefix "[{name}]" "cd server && npm run dev" "cd client && npm start" "cd socket-server && npm start" "cd media-server && npm start"
 
+
 <h1 align="center"> Project Title </h1> <br>
 
 <p align="center">
@@ -22,12 +23,16 @@ concurrently --names "Server,Client,Socket,Media" --prefix-colors "green,red,blu
 
 ## Introduction
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e91606af4a364076a7058c5ea1c006a8)](https://www.codacy.com/app/joneubank/microservice-template-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=overture-stack/microservice-template-java&amp;utm_campaign=Badge_Grade)
-[![CircleCI](https://circleci.com/gh/overture-stack/microservice-template-java/tree/master.svg?style=shield)](https://circleci.com/gh/overture-stack/microservice-template-java/tree/master)
+NVT-Teams: This is a graduation project, a system that allows users to message online, video call and interact with each other through articles.
 
-TODO: Replace with introduction
+## Features
+NVT-Teams: Description of features
 
+**Include a list of**
+* Chat / delete message.
+* Video call 1-1, 1-n, n-n.
+* Create/Update/AddMembers/RemoveMembers room.
+* Create/Update/Delete/Like/Comment post.
 ## Tính năng
 T-teams
 
@@ -39,6 +44,11 @@ T-teams
 ## Yêu cầu
 Hệ thống yêu cầu môi trường NodeJS, MongoDB.
 
+
+### NODEJS
+- Install [NVM](https://github.com/nvm-sh/nvm) to manage NodeJS versions
+- Install [Node.js](https://nodejs.org/en/) version 14.0.0 to install module
+- Install [Node.js](https://nodejs.org/en/) version 18.0.0 to run (recommend)
 ### NODEJS
 A running instance of [EGO](https://github.com/overture-stack/ego/) is required to generate the Authorization tokens and to provide the verification key.
 
