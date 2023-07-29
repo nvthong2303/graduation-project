@@ -27,10 +27,8 @@ mongoose.connect(config.mongo.uri)
     });
 
 io.on('connection', (socket) => {
-    console.log('Client connected  ');
     socket.on("join", (roomId) => {
         try {
-            console.log(`Client ${roomId} đã tham gia roomId "${roomId}".`);
             socket.join(roomId);
         } catch (error) {
             console.log(error);
@@ -44,11 +42,6 @@ io.on('connection', (socket) => {
             io.to(message.room).emit('receiveMessage', message);
         });
     });
-
-    socket.on('message_test', (message) => {
-        console.log(message.index)
-        io.to(message.room).emit('receiveMessage', message);
-    })
 
     socket.on("delete", (message) => {
         io.to(message.room).emit('receiveDeleteMessage', message.messageId);
