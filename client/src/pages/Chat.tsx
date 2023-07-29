@@ -78,7 +78,7 @@ export default function Chat() {
                 handleGetDetailRoom(id)
             }
         }
-    }, [JSON.stringify(currentRoom)])
+    }, [JSON.stringify(currentRoom), email, id])
 
     const handleGetDetailRoom = async (id: string) => {
         const token = localStorage.getItem("_token_")
