@@ -33,16 +33,26 @@ NVT-Teams: Description of features
 * Video call 1-1, 1-n, n-n.
 * Create/Update/AddMembers/RemoveMembers room.
 * Create/Update/Delete/Like/Comment post.
+## Tính năng
+T-teams
+
+* Chat
+* Gọi video
+* Tạo, sửa, xóa, like, bình luận bài viết
 
 
-## Requirements
-The application can be run locally or in a docker container, the requirements for each setup are listed below.
+## Yêu cầu
+Hệ thống yêu cầu môi trường NodeJS, MongoDB.
 
 
 ### NODEJS
 - Install [NVM](https://github.com/nvm-sh/nvm) to manage NodeJS versions
 - Install [Node.js](https://nodejs.org/en/) version 14.0.0 to install module
 - Install [Node.js](https://nodejs.org/en/) version 18.0.0 to run (recommend)
+### NODEJS
+A running instance of [EGO](https://github.com/overture-stack/ego/) is required to generate the Authorization tokens and to provide the verification key.
+
+[EGO](https://github.com/overture-stack/ego/) can be cloned and run locally if no public server is available. 
 
 
 ### Local
