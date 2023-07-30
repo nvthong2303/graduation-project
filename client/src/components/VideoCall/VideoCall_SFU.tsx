@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import Video from "./videoReceive";
-import {MEDIA_SERVER_URL} from "../../utils/config";
-import {useSelector} from "react-redux";
-import {Button, Typography} from "@mui/material";
-import {Player} from "@lottiefiles/react-lottie-player";
+import { MEDIA_SERVER_URL } from "../../utils/config";
+import { useSelector } from "react-redux";
+import { Button, Typography } from "@mui/material";
+import { Player } from "@lottiefiles/react-lottie-player";
 import waitingJson from "../../assets/animation/waiting.json";
-import {makeStyles} from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
     root: {
@@ -40,7 +40,7 @@ const pc_config = {
         //   'username': '[USERNAME]'
         // },
         {
-            urls: "stun:stun.l.google.com:19302",
+            urls: "stun.actionvoip.com:3478",
         },
     ],
 };
@@ -68,25 +68,25 @@ const VideoCall_SFU = (props: Props) => {
     }, []);
 
     const createReceiverOffer = useCallback(async (pc: RTCPeerConnection, senderSocketID: string) => {
-            try {
-                const sdp = await pc.createOffer({
-                    offerToReceiveAudio: true,
-                    offerToReceiveVideo: true,
-                });
-                await pc.setLocalDescription(new RTCSessionDescription(sdp));
+        try {
+            const sdp = await pc.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true,
+            });
+            await pc.setLocalDescription(new RTCSessionDescription(sdp));
 
-                if (!socketRef.current) return;
-                // console.log(Date.now(), "emit receiverOffer_SFU")
-                socketRef.current.emit("receiverOffer_SFU", {
-                    sdp,
-                    receiverSocketID: socketRef.current.id,
-                    senderSocketID,
-                    roomID: room._id,
-                });
-            } catch (error) {
-                console.log("err createReceiverOffer", error);
-            }
-        }, []);
+            if (!socketRef.current) return;
+            // console.log(Date.now(), "emit receiverOffer_SFU")
+            socketRef.current.emit("receiverOffer_SFU", {
+                sdp,
+                receiverSocketID: socketRef.current.id,
+                senderSocketID,
+                roomID: room._id,
+            });
+        } catch (error) {
+            console.log("err createReceiverOffer", error);
+        }
+    }, []);
 
     const createReceiverPeerConnection = useCallback((socketID: string, name: string) => {
         try {
@@ -132,15 +132,15 @@ const VideoCall_SFU = (props: Props) => {
     }, []);
 
     const createReceivePC = useCallback((id: string, name: string) => {
-            try {
-                // console.log(`socketID(${id}) user entered`);
-                const pc = createReceiverPeerConnection(id, name);
-                if (!(socketRef.current && pc)) return;
-                createReceiverOffer(pc, id);
-            } catch (error) {
-                console.log("err createReceivePC", error);
-            }
-        }, [createReceiverOffer, createReceiverPeerConnection]);
+        try {
+            // console.log(`socketID(${id}) user entered`);
+            const pc = createReceiverPeerConnection(id, name);
+            if (!(socketRef.current && pc)) return;
+            createReceiverOffer(pc, id);
+        } catch (error) {
+            console.log("err createReceivePC", error);
+        }
+    }, [createReceiverOffer, createReceiverPeerConnection]);
 
     const createSenderOffer = useCallback(async () => {
         try {
@@ -243,8 +243,8 @@ const VideoCall_SFU = (props: Props) => {
         });
 
         socketRef.current.on("allUsers_SFU", (data: { users: Array<{ id: string, name: string }> }) => {
-                data.users.forEach((user) => createReceivePC(user.id, user.name));
-            });
+            data.users.forEach((user) => createReceivePC(user.id, user.name));
+        });
 
         socketRef.current.on("user_exit", (data: { id: string }) => {
             closeReceivePC(data.id);
@@ -252,50 +252,50 @@ const VideoCall_SFU = (props: Props) => {
         });
 
         socketRef.current.on("getSenderAnswer_SFU", async (data: { sdp: RTCSessionDescription }) => {
-                try {
-                    // console.log(Date.now(),"********** getSenderAnswer_SFU")
-                    if (!sendPCRef.current) return;
-                    await sendPCRef.current.setRemoteDescription(
-                        new RTCSessionDescription(data.sdp)
-                    );
-                } catch (error) {
-                    console.log(error);
-                }
-            });
+            try {
+                // console.log(Date.now(),"********** getSenderAnswer_SFU")
+                if (!sendPCRef.current) return;
+                await sendPCRef.current.setRemoteDescription(
+                    new RTCSessionDescription(data.sdp)
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
         socketRef.current.on("getSenderCandidate_SFU", async (data: { candidate: RTCIceCandidateInit }) => {
-                try {
-                    // console.log(Date.now(),"********** getSenderCandidate_SFU")
-                    if (!(data.candidate && sendPCRef.current)) return;
-                    await sendPCRef.current.addIceCandidate(
-                        new RTCIceCandidate(data.candidate)
-                    );
-                } catch (error) {
-                    console.log(error);
-                }
-            });
+            try {
+                // console.log(Date.now(),"********** getSenderCandidate_SFU")
+                if (!(data.candidate && sendPCRef.current)) return;
+                await sendPCRef.current.addIceCandidate(
+                    new RTCIceCandidate(data.candidate)
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
         socketRef.current.on("getReceiverAnswer_SFU", async (data: { id: string; sdp: RTCSessionDescription }) => {
-                try {
-                    // console.log(Date.now(), "********** getReceiverAnswer_SFU")
-                    const pc: RTCPeerConnection = receivePCsRef.current[data.id];
-                    if (!pc) return;
-                    await pc.setRemoteDescription(data.sdp);
-                } catch (error) {
-                    console.log(error);
-                }
-            });
+            try {
+                // console.log(Date.now(), "********** getReceiverAnswer_SFU")
+                const pc: RTCPeerConnection = receivePCsRef.current[data.id];
+                if (!pc) return;
+                await pc.setRemoteDescription(data.sdp);
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
         socketRef.current.on("getReceiverCandidate_SFU", async (data: { id: string; candidate: RTCIceCandidateInit }) => {
-                try {
-                    // console.log(Date.now(),"********** getReceiverCandidate_SFU")
-                    const pc: RTCPeerConnection = receivePCsRef.current[data.id];
-                    if (!(pc && data.candidate)) return;
-                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                } catch (error) {
-                    console.log(error);
-                }
-            });
+            try {
+                // console.log(Date.now(),"********** getReceiverCandidate_SFU")
+                const pc: RTCPeerConnection = receivePCsRef.current[data.id];
+                if (!(pc && data.candidate)) return;
+                await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
         return () => {
             if (socketRef.current) {
@@ -340,7 +340,7 @@ const VideoCall_SFU = (props: Props) => {
                                     ? '45%'
                                     : users.length < 9
                                         ? '45%'
-                                        : '300px' ,
+                                        : '300px',
                             height: users.length === 0
                                 ? '100%'
                                 : users.length < 4
@@ -415,7 +415,7 @@ const VideoCall_SFU = (props: Props) => {
                 ))}
             </div>
             <Button onClick={() => {
-                if (! join) {
+                if (!join) {
                     startCall()
                 } else {
                     outCall()
