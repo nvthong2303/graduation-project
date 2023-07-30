@@ -40,7 +40,7 @@ const pc_config = {
         //   'username': '[USERNAME]'
         // },
         {
-            urls: "stun.actionvoip.com:3478",
+            urls: "stun:stun.l.google.com:19302",
         },
     ],
 };
@@ -299,6 +299,10 @@ const VideoCall_SFU = (props: Props) => {
 
         return () => {
             if (socketRef.current) {
+                socketRef.current.emit('outRoom_SFU', {
+                    socketId: socketRef.current.id,
+                    roomID: room._id
+                })
                 socketRef.current.disconnect();
             }
             if (sendPCRef.current) {

@@ -1,13 +1,13 @@
 import React from 'react';
-import {makeStyles} from "@mui/styles";
-import {GetListMessageByRoomIdApi} from "../../apis/message.api";
-import {useDispatch, useSelector} from "react-redux";
-import {getListMessageSuccess} from "../../store/action/message.action";
+import { makeStyles } from "@mui/styles";
+import { GetListMessageByRoomIdApi } from "../../apis/message.api";
+import { useDispatch, useSelector } from "react-redux";
+import { getListMessageSuccess, clearListMessage } from "../../store/action/message.action";
 // @ts-ignore
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Box, CircularProgress, Typography} from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import MessageItem from "./MessageItem";
-import {message} from "../../store/reducer/messge.reducer";
+import { message } from "../../store/reducer/messge.reducer";
 
 const useStyles = makeStyles({
     root: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 })
 
 export default function ListMessage(props: any) {
-    const {room} = props
+    const { room } = props
     const classes = useStyles();
     const token = localStorage.getItem("_token_")
     const listMessage: message[] = useSelector((state: any) => state.messageReducer?.listMessage);
@@ -50,13 +50,14 @@ export default function ListMessage(props: any) {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
+        dispatch(clearListMessage())
         if (room._id) {
             handleGetListMessage(0, 20)
         }
     }, [room._id])
 
     React.useEffect(() => {
-        if (total && total == listMessage.length)  {
+        if (total && total == listMessage.length) {
             setHasMore(false)
         }
     }, [listMessage.length])

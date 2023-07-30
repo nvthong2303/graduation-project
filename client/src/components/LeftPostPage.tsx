@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import {Box, Button, TextField, Typography} from '@mui/material';
-import {useFormik} from "formik";
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import {useDispatch} from "react-redux";
-import {useHistory} from "react-router-dom";
-import {CreatePostAPI, UpdatePostAPI} from "../apis/post.api";
-import {useSnackbar} from "notistack";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { CreatePostAPI, UpdatePostAPI } from "../apis/post.api";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles({
     root: {
@@ -45,7 +45,7 @@ export default function LeftPostPage(props: any) {
         formikPost.setFieldValue('content', post ? post.content : '')
     }, [JSON.stringify(post)])
 
-    const sx={
+    const sx = {
         marginTop: '10px'
     }
 
@@ -80,6 +80,9 @@ export default function LeftPostPage(props: any) {
             const res = await CreatePostAPI(post, token);
 
             if (res.status === 200) {
+                formikPost.setFieldValue('title', '')
+                formikPost.setFieldValue('category', '')
+                formikPost.setFieldValue('content', '')
                 enqueueSnackbar('Create post success', {
                     variant: 'success'
                 });
@@ -113,6 +116,9 @@ export default function LeftPostPage(props: any) {
                 setRefresh((prev: any) => {
                     return !prev
                 })
+                formikPost.setFieldValue('title', '')
+                formikPost.setFieldValue('category', '')
+                formikPost.setFieldValue('content', '')
             } else {
                 enqueueSnackbar('Update post success', {
                     variant: 'error'
