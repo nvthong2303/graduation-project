@@ -1,9 +1,10 @@
 import React from 'react';
 import io from 'socket.io-client';
-import {room} from "../store/reducer/room.reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {receiveMessageDeleteSuccess, receiveMessageSuccess} from "../store/action/message.action";
-import {SOCKET_SERVER_URL} from "../utils/config";
+import { room } from "../store/reducer/room.reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { receiveMessageDeleteSuccess, receiveMessageSuccess } from "../store/action/message.action";
+import { SOCKET_SERVER_URL } from "../utils/config";
+import { useParams } from 'react-router-dom';
 
 const subRoom = [];
 
@@ -13,7 +14,16 @@ export default function SocketIO(props: any) {
     const listRoom: room[] = useSelector((state: any) => state.roomReducer?.listRoom);
     const currentRoom: room = useSelector((state: any) => state.roomReducer?.currentRoom);
     const dispatch = useDispatch();
-    const [connected, setConnected] = React.useState(false)
+    const [connected, setConnected] = React.useState(false);
+    const { id, email } = useParams() as any;
+    const [currentRoomID, setCurrentRoomID] = React.useState('');
+
+    React.useEffect(() => {
+        if (currentRoomID.length > 0) {
+            socketRef.current?.emit('out_room', currentRoomID)
+        }
+        setCurrentRoomID(id)
+    }, [id])
 
     React.useEffect(() => {
         if (!socketRef.current) {
@@ -45,6 +55,7 @@ export default function SocketIO(props: any) {
 
     React.useEffect(() => {
         if (currentRoom._id) {
+            setCurrentRoomID(currentRoom._id);
             socketRef.current?.emit('join', currentRoom._id)
 
             socketRef.current?.on('receiveMessage', (content: any) => {

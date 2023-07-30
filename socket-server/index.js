@@ -50,6 +50,10 @@ io.on('connection', (socket) => {
         handleDeleteMessage(message.messageId);
     });
 
+    socket.on("out_room", (roomId) => {
+        socket.leave(roomId);
+    })
+
     socket.on("disconnect", () => {
         try {
             for (const channel in socket.rooms) {
