@@ -85,7 +85,7 @@ export default function General(props: any) {
     const handleGetInfo = async (id: string, token: string) => {
         const res = await GetInfoApi(id, token)
 
-        if (res.status === 200) {
+        if (res.status === 200 && res.data) {
             dispatch(getInfoUserSuccess({
                 user: res.data,
                 token
