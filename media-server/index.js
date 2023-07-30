@@ -25,7 +25,7 @@ const pc_config = {
         //   'username': '[USERNAME]'
         // },
         {
-            urls: "stun.actionvoip.com:3478",
+            urls: "stun:stun1.google.com:19302",
         },
     ],
 };
